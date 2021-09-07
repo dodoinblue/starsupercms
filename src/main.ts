@@ -30,6 +30,7 @@ async function bootstrap() {
     .setTitle('StarSuper CMS')
     .setDescription('StarSuper CMS API description')
     .setVersion(APP_INFO.version)
+    .addServer(`http://${APP.host}:${APP.port}/api/v1`, 'local server')
     .build();
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('doc/v1', app, document);

@@ -1,3 +1,6 @@
+import { config } from 'dotenv';
+config();
+
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const packageJSON = require('../../package.json');
 
@@ -27,4 +30,22 @@ export const REDIS = {
   password: (process.env.REDIS_PASSWORD || null) as string,
   ttl: null,
   defaultCacheTTL: 60 * 60 * 24,
+};
+
+export const EMAIL = {
+  nodemailer: {
+    host: 'smtp.qq.com',
+    secure: true,
+    port: 465,
+    auth: {
+      user: process.env.EMAIL_ACCOUNT,
+      pass: process.env.EMAIL_PASSWORD,
+    },
+  },
+  sender: process.env.EMAIL_ACCOUNT,
+};
+
+export const JWT = {
+  secretOrKey: process.env.JWT_SECRET || 'jwtsecret',
+  expiresIn: 3600 * 1000,
 };
