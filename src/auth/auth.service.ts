@@ -90,25 +90,15 @@ export class AuthService {
     if (verifyTokenRecord && verifyTokenRecord.token) {
       if (dayjs().diff(dayjs(verifyTokenRecord.updatedAt), 'h') >= 24) {
         await this.verifyTokenRepo.delete(verifyTokenRecord.id);
-        throw new CustomError(
-          ErrCodes.AUTH_CODE_EXPIRED,
-          'Verification code expires after 1 days',
-        );
+        throw new CustomError(ErrCodes.AUTH_CODE_EXPIRED, 'Verification code expires after 1 day');
       }
 
       if (token === verifyTokenRecord.token) {
-        await this.accountRepo.update(
-          { type: 'email', username: email },
-          { verified: true },
-        );
+        await this.accountRepo.update({ type: 'email', username: email }, { verified: true });
         return;
       }
     }
-    throw new CustomError(
-      ErrCodes.AUTH_CODE_NOT_VALID,
-      'Wrong code',
-      HttpStatus.BAD_REQUEST,
-    );
+    throw new CustomError(ErrCodes.AUTH_CODE_NOT_VALID, 'Wrong code', HttpStatus.BAD_REQUEST);
   }
 
   async validateEmailLogin(email, password) {
@@ -116,10 +106,7 @@ export class AuthService {
       where: { username: email, type: 'email' },
     });
     if (!accountFromDb) {
-      throw new HttpException(
-        ErrCodes.AUTH_USER_NOT_FOUND,
-        HttpStatus.NOT_FOUND,
-      );
+      throw new HttpException(ErrCodes.AUTH_USER_NOT_FOUND, HttpStatus.NOT_FOUND);
     }
     if (AUTH.requireVerify && !accountFromDb.verified) {
       throw new HttpException('LOGIN.EMAIL_NOT_VERIFIED', HttpStatus.FORBIDDEN);
@@ -130,10 +117,7 @@ export class AuthService {
     if (isValidPass) {
       return await this.createAuthToken(accountFromDb);
     } else {
-      throw new HttpException(
-        ErrCodes.AUTH_UNAUTHORIZED,
-        HttpStatus.UNAUTHORIZED,
-      );
+      throw new HttpException(ErrCodes.AUTH_UNAUTHORIZED, HttpStatus.UNAUTHORIZED);
     }
   }
 
@@ -142,10 +126,7 @@ export class AuthService {
       where: { username: email, type: 'email' },
     });
     if (accountFromDb) {
-      throw new HttpException(
-        ErrCodes.AUTH_REG_USER_EXIST,
-        HttpStatus.BAD_REQUEST,
-      );
+      throw new HttpException(ErrCodes.AUTH_REG_USER_EXIST, HttpStatus.BAD_REQUEST);
     } else {
       const hashed = await bcrypt.hash(password, AUTH.saltRounds);
       const account = this.accountRepo.create({
