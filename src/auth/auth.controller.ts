@@ -1,18 +1,21 @@
 import { Body, Controller, Get, Post } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
-import { Login } from './dto/account.dto';
+import { AuthService } from './auth.service';
+import { EmailAuth } from './dto/account.dto';
 
 @Controller('auth')
 @ApiTags('Auth')
 export class AuthController {
+  constructor(private readonly authService: AuthService) {}
+
   @Post('email/register')
-  async register() {
-    // todo
+  async register(@Body() { email, password }: EmailAuth) {
+    return this.authService.registerByEmail(email, password);
   }
 
   @Post('email/login')
-  async login(@Body() body: Login) {
-    // todo
+  async login(@Body() { email, password }: EmailAuth) {
+    return this.authService.validateEmailLogin(email, password);
   }
 
   @Get('email/verify/:token')

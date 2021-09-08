@@ -1,4 +1,4 @@
-import { IsString } from 'class-validator';
+import { IsBoolean, IsString } from 'class-validator';
 import { Column, Entity, JoinColumn, OneToOne } from 'typeorm';
 import { BaseEntity } from '../../common/entity/base.entity';
 import { User } from './user.entity';
@@ -20,6 +20,10 @@ export class Account extends BaseEntity {
   @OneToOne(() => User)
   @JoinColumn()
   user: User;
+
+  @IsBoolean()
+  @Column({ nullable: false, default: false })
+  verified: boolean;
 
   @Column({ type: 'int', default: 0 })
   status: number; // 0: normal, 10: require_reset, 100: disabled

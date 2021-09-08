@@ -1,8 +1,6 @@
+import packageJSON from '../../package.json';
 import { config } from 'dotenv';
 config();
-
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const packageJSON = require('../../package.json');
 
 export const APP = {
   host: 'localhost',
@@ -45,7 +43,11 @@ export const EMAIL = {
   sender: process.env.EMAIL_ACCOUNT,
 };
 
-export const JWT = {
-  secretOrKey: process.env.JWT_SECRET || 'jwtsecret',
-  expiresIn: 3600 * 1000,
+export const AUTH = {
+  jwt: {
+    secretOrKey: process.env.JWT_SECRET || 'jwtsecret',
+    expiresIn: 3600 * 1000,
+  },
+  saltRounds: 10,
+  requireVerify: false,
 };
