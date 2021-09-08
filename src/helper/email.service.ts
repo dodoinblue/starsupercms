@@ -24,10 +24,7 @@ export class EmailService {
       if (error) {
         this.clientIsValid = false;
         setTimeout(this.verifyClient.bind(this), 1000 * 60 * 30);
-        console.warn(
-          'Email client not initialized. Will retry after 30 min.',
-          error,
-        );
+        console.warn('Email client not initialized. Will retry after 30 min.', error);
       } else {
         this.clientIsValid = true;
         console.info('Email client initialized.');
@@ -41,12 +38,13 @@ export class EmailService {
       return false;
     }
     const options = Object.assign(mailOptions, { from: EMAIL.sender });
-    this.transporter.sendMail(options, (error, info) => {
-      if (error) {
-        console.warn('Email not sent!', error);
-      } else {
-        console.info('Email sent', info.messageId, info.response);
-      }
-    });
+    console.log('sendMail', options);
+    // this.transporter.sendMail(options, (error, info) => {
+    //   if (error) {
+    //     console.warn('Email not sent!', error);
+    //   } else {
+    //     console.info('Email sent', info.messageId, info.response);
+    //   }
+    // });
   }
 }

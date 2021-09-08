@@ -10,6 +10,7 @@ import { AUTH } from '../config/configurations';
 import { AccountVerifyToken } from './entity/account-verify-token.entity';
 import { randomNumberString } from '../utils/nanoid';
 import dayjs from 'dayjs';
+import { AccountTokenPurpose, AccountType } from './auth.interface';
 
 @Injectable()
 export class AuthService {
@@ -34,8 +35,9 @@ export class AuthService {
   }
 
   async createAccountVerifyToken(
-    type: string,
+    type: AccountType,
     username: string,
+    purpose: AccountTokenPurpose,
     options?: {
       skipAccountCheck: boolean;
     },
@@ -56,6 +58,7 @@ export class AuthService {
     const verificationRecord = await this.verifyTokenRepo.findOne({
       type,
       username,
+      purpose,
     });
     const token = randomNumberString(6);
     if (verificationRecord) {
@@ -75,6 +78,7 @@ export class AuthService {
       const verification = await this.verifyTokenRepo.create({
         type,
         username,
+        purpose,
         token,
       });
       await this.verifyTokenRepo.save(verification);
@@ -84,8 +88,9 @@ export class AuthService {
 
   async verifyEmail(email: string, token: string) {
     const verifyTokenRecord = await this.verifyTokenRepo.findOne({
-      type: 'email',
+      type: AccountType.Email,
       username: email,
+      purpose: AccountTokenPurpose.Verify,
     });
     if (verifyTokenRecord && verifyTokenRecord.token) {
       if (dayjs().diff(dayjs(verifyTokenRecord.updatedAt), 'h') >= 24) {
@@ -94,7 +99,11 @@ export class AuthService {
       }
 
       if (token === verifyTokenRecord.token) {
-        await this.accountRepo.update({ type: 'email', username: email }, { verified: true });
+        await this.accountRepo.update(
+          { type: AccountType.Email, username: email },
+          { verified: true },
+        );
+        await this.verifyTokenRepo.delete(verifyTokenRecord.id);
         return;
       }
     }
@@ -103,7 +112,8 @@ export class AuthService {
 
   async validateEmailLogin(email, password) {
     const accountFromDb = await this.accountRepo.findOne({
-      where: { username: email, type: 'email' },
+      username: email,
+      type: AccountType.Email,
     });
     if (!accountFromDb) {
       throw new HttpException(ErrCodes.AUTH_USER_NOT_FOUND, HttpStatus.NOT_FOUND);
@@ -123,7 +133,8 @@ export class AuthService {
 
   async registerByEmail(email: string, password: string) {
     const accountFromDb = await this.accountRepo.findOne({
-      where: { username: email, type: 'email' },
+      username: email,
+      type: AccountType.Email,
     });
     if (accountFromDb) {
       throw new HttpException(ErrCodes.AUTH_REG_USER_EXIST, HttpStatus.BAD_REQUEST);
@@ -131,10 +142,35 @@ export class AuthService {
       const hashed = await bcrypt.hash(password, AUTH.saltRounds);
       const account = this.accountRepo.create({
         username: email,
-        type: 'email',
+        type: AccountType.Email,
         password: hashed,
       });
       return await this.accountRepo.save(account);
     }
+  }
+
+  async resetPasswordByEmailToken(email: string, token: string, password: string) {
+    const resetTokenRecord = await this.verifyTokenRepo.findOne({
+      type: AccountType.Email,
+      username: email,
+      purpose: AccountTokenPurpose.Reset,
+    });
+    if (resetTokenRecord && resetTokenRecord.token) {
+      if (dayjs().diff(dayjs(resetTokenRecord.updatedAt), 'h') >= 1) {
+        await this.verifyTokenRepo.delete(resetTokenRecord.id);
+        throw new CustomError(ErrCodes.AUTH_CODE_EXPIRED, 'Verification code expires after 1 hour');
+      }
+
+      if (token === resetTokenRecord.token) {
+        const hashed = await bcrypt.hash(password, AUTH.saltRounds);
+        await this.accountRepo.update(
+          { type: AccountType.Email, username: email },
+          { password: hashed },
+        );
+        await this.verifyTokenRepo.delete(resetTokenRecord.id);
+        return;
+      }
+    }
+    throw new CustomError(ErrCodes.AUTH_CODE_NOT_VALID, 'Wrong code', HttpStatus.BAD_REQUEST);
   }
 }

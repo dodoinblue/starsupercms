@@ -15,4 +15,8 @@ export class AccountVerifyToken extends BaseEntity {
   @IsString()
   @Column({ nullable: false })
   token: string;
+
+  @IsString()
+  @Column({ nullable: false })
+  purpose: string;
 }
