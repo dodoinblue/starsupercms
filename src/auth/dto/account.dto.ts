@@ -1,4 +1,10 @@
-import { IsEmail, Matches, MaxLength, MinLength } from 'class-validator';
+import {
+  IsEmail,
+  IsString,
+  Matches,
+  MaxLength,
+  MinLength,
+} from 'class-validator';
 
 export class EmailAuth {
   @IsEmail()
@@ -10,4 +16,22 @@ export class EmailAuth {
     message: `Only 0-9 a-z A-Z and ~\`!@#$%^&*()_-+={[}]|\:;"'<,>.?/ are allowed`,
   })
   password: string;
+}
+
+export class Email {
+  @IsEmail()
+  email: string;
+}
+
+export class EmailVerify {
+  @IsEmail()
+  email: string;
+
+  @IsString()
+  token: string;
+}
+
+export class EmailResetPassword extends EmailAuth {
+  @IsString()
+  token: string;
 }

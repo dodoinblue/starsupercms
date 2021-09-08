@@ -34,6 +34,7 @@
     "class-transformer": "^0.4.0",
     "class-validator": "^0.13.1",
     "compression": "^1.7.4",
+    "dayjs": "^1.10.6",
     "dotenv": "^8.6.0",
     "helmet": "^4.6.0",
     "jsonwebtoken": "^8.5.1",

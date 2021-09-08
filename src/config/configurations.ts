@@ -20,6 +20,7 @@ export const TYPEORM_DB = {
   username: process.env.DB_USER || 'dev',
   password: process.env.DB_PASSWORD || 'devpass',
   database: 'cms-dev',
+  timezone: 'Z',
 };
 
 export const REDIS = {
