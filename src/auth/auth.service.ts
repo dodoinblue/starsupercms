@@ -1,6 +1,6 @@
 import bcrypt from 'bcrypt';
 import lodash from 'lodash';
-import * as jwt from 'jsonwebtoken';
+import jwt from 'jsonwebtoken';
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
@@ -22,10 +22,13 @@ export class AuthService {
     private verifyTokenRepo: Repository<AccountVerifyToken>,
   ) {}
 
-  async createAuthToken(account: Account) {
+  async createAuthToken(account: Partial<Account>) {
     const expiresIn = AUTH.jwt.expiresIn;
     const secretOrKey = AUTH.jwt.secretOrKey;
-    const payload = lodash.pick(account, ['id', 'type', 'username', 'roles']);
+    const payload = {
+      ...lodash.pick(account, ['username', 'roles']),
+      userId: account.id,
+    };
     const token = jwt.sign(payload, secretOrKey, { expiresIn });
     return {
       expires_in: expiresIn,

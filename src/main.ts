@@ -25,11 +25,7 @@ async function bootstrap() {
         const errorMessage = errors
           .map((error) => Object.values(error.constraints).join(';'))
           .join('; ');
-        return new CustomError(
-          ErrCodes.VALIDATION_ERROR,
-          errorMessage,
-          HttpStatus.BAD_REQUEST,
-        );
+        return new CustomError(ErrCodes.VALIDATION_ERROR, errorMessage, HttpStatus.BAD_REQUEST);
       },
     }),
   );
@@ -43,6 +39,7 @@ async function bootstrap() {
     .setDescription('StarSuper CMS API description')
     .setVersion(APP_INFO.version)
     .addServer(`http://${APP.host}:${APP.port}/api/v1`, 'local server')
+    .addBearerAuth()
     .build();
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('doc/v1', app, document);

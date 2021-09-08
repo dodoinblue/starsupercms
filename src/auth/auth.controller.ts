@@ -1,6 +1,7 @@
-import { Body, Controller, HttpCode, Post } from '@nestjs/common';
-import { ApiTags } from '@nestjs/swagger';
+import { Body, Controller, HttpCode, Post, Req, UseGuards } from '@nestjs/common';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { APP_INFO, AUTH } from '../config/configurations';
+import { JwtGuard } from '../guards/jwt.guard';
 import { EmailService } from '../helper/email.service';
 import { AccountTokenPurpose, AccountType } from './auth.interface';
 import { AuthService } from './auth.service';
@@ -96,12 +97,21 @@ export class AuthController {
   }
 
   @Post('token/validate')
+  @ApiBearerAuth()
+  @UseGuards(JwtGuard)
+  @HttpCode(204)
   checkToken() {
-    // todo
+    // No content
   }
 
-  @Post('token/renewal')
-  renewalToken() {
-    // todo
+  @Post('token/extend')
+  @ApiBearerAuth()
+  @UseGuards(JwtGuard)
+  @HttpCode(200)
+  async renewalToken(@Req() { custom }) {
+    return await this.authService.createAuthToken({
+      id: custom.userId,
+      username: custom.username,
+    });
   }
 }
