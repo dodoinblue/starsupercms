@@ -1,7 +1,7 @@
 import bcrypt from 'bcrypt';
 import lodash from 'lodash';
 import jwt from 'jsonwebtoken';
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { CustomError, ErrCodes } from '../errors/errors';
@@ -115,14 +115,25 @@ export class AuthService {
 
   async validateEmailLogin(email, password) {
     const accountFromDb = await this.accountRepo.findOne({
-      username: email,
-      type: AccountType.Email,
+      where: {
+        username: email,
+        type: AccountType.Email,
+      },
+      select: ['id', 'username', 'type', 'password', 'verified', 'status'],
     });
     if (!accountFromDb) {
-      throw new HttpException(ErrCodes.AUTH_USER_NOT_FOUND, HttpStatus.NOT_FOUND);
+      throw new CustomError(
+        ErrCodes.AUTH_USER_NOT_FOUND,
+        'User not found',
+        HttpStatus.UNAUTHORIZED,
+      );
     }
     if (AUTH.requireVerify && !accountFromDb.verified) {
-      throw new HttpException('LOGIN.EMAIL_NOT_VERIFIED', HttpStatus.FORBIDDEN);
+      throw new CustomError(
+        ErrCodes.AUTH_EMAIL_NOT_VERIFIED,
+        'User not verified.',
+        HttpStatus.UNAUTHORIZED,
+      );
     }
 
     const isValidPass = await bcrypt.compare(password, accountFromDb.password);
@@ -130,7 +141,11 @@ export class AuthService {
     if (isValidPass) {
       return await this.createAuthToken(accountFromDb);
     } else {
-      throw new HttpException(ErrCodes.AUTH_UNAUTHORIZED, HttpStatus.UNAUTHORIZED);
+      throw new CustomError(
+        ErrCodes.AUTH_WRONG_CREDENTIAL,
+        'Wrong credential',
+        HttpStatus.UNAUTHORIZED,
+      );
     }
   }
 
@@ -140,7 +155,11 @@ export class AuthService {
       type: AccountType.Email,
     });
     if (accountFromDb) {
-      throw new HttpException(ErrCodes.AUTH_REG_USER_EXIST, HttpStatus.BAD_REQUEST);
+      throw new CustomError(
+        ErrCodes.AUTH_REG_USER_EXIST,
+        'User already exist',
+        HttpStatus.CONFLICT,
+      );
     } else {
       const hashed = await bcrypt.hash(password, AUTH.saltRounds);
       const account = this.accountRepo.create({
@@ -148,7 +167,8 @@ export class AuthService {
         type: AccountType.Email,
         password: hashed,
       });
-      return await this.accountRepo.save(account);
+      const createdAccount = await this.accountRepo.save(account);
+      return lodash.omit(createdAccount, 'password');
     }
   }
 

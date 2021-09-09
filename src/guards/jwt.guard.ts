@@ -1,5 +1,4 @@
 import { CanActivate, ExecutionContext, HttpStatus, Injectable } from '@nestjs/common';
-import express from 'express';
 import { Observable } from 'rxjs';
 import jwt from 'jsonwebtoken';
 import lodash from 'lodash';

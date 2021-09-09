@@ -36,7 +36,7 @@ export class ProfilesController {
     return await this.profileService.findOne(userId);
   }
 
-  // Create or overwrite
+  // Create or update
   @Post('users/:userId')
   @Self()
   async createProfile(
