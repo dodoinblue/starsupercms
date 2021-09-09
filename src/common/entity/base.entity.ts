@@ -9,7 +9,7 @@ import {
 import { nanoid } from '../../utils/nanoid';
 
 export abstract class BaseEntity {
-  @PrimaryColumn({ length: 32, nullable: false })
+  @PrimaryColumn({ length: 32, nullable: false, unique: true })
   id: string;
 
   @CreateDateColumn()
@@ -29,6 +29,7 @@ export abstract class BaseEntity {
 
   @BeforeInsert()
   generateId() {
+    console.log('base before insert');
     this.id = nanoid(16);
   }
 }

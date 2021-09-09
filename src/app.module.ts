@@ -6,6 +6,7 @@ import { appEnv } from './config/environment';
 import { AuthModule } from './auth/auth.module';
 import { HelperModule } from './helper/helper.module';
 import { ProcessRequestContextMiddleware } from './middleware/process-request-context.middleware';
+import { ProfilesModule } from './profile/profile.module';
 
 @Module({
   imports: [
@@ -17,6 +18,7 @@ import { ProcessRequestContextMiddleware } from './middleware/process-request-co
       synchronize: appEnv.isDevMode,
     }),
     AuthModule,
+    ProfilesModule,
   ],
   controllers: [AppController],
 })

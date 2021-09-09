@@ -1,9 +1,7 @@
-import { ApiHideProperty } from '@nestjs/swagger';
 import { IsBoolean, IsString } from 'class-validator';
-import { Column, Entity, JoinColumn, OneToMany, OneToOne } from 'typeorm';
+import { Column, Entity, OneToMany } from 'typeorm';
 import { BaseEntity } from '../../common/entity/base.entity';
 import { RoleToAccount } from './role-account.entity';
-import { User } from './user.entity';
 
 @Entity()
 export class Account extends BaseEntity {
@@ -18,11 +16,6 @@ export class Account extends BaseEntity {
   @IsString()
   @Column()
   password?: string;
-
-  @ApiHideProperty()
-  @OneToOne(() => User)
-  @JoinColumn()
-  user: User;
 
   @OneToMany(() => RoleToAccount, (roleToAccount) => roleToAccount.account)
   roleToAccounts!: RoleToAccount[];

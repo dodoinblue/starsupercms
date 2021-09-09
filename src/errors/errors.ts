@@ -11,8 +11,9 @@ export enum ErrCodes {
   AUTH_CODE_EXPIRED = 'AUTH.CODE_EXPIRED',
   EMAIL_SENT_RECENTLY = 'EMAIL_SENT_RECENTLY',
 
-  // Validation
+  // Generic
   VALIDATION_ERROR = 'VALIDATION_ERROR',
+  NOT_FOUND = 'NOT_FOUND',
 }
 
 export class CustomError extends HttpException {
