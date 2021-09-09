@@ -12,6 +12,7 @@ import { ProcessRequestContextMiddleware } from './middleware/process-request-co
     HelperModule,
     TypeOrmModule.forRoot({
       ...(TYPEORM_DB as any),
+      logging: 'all',
       entities: [__dirname + '/**/*.entity{.ts,.js}'],
       synchronize: appEnv.isDevMode,
     }),
