@@ -1,5 +1,5 @@
 import { ApiHideProperty } from '@nestjs/swagger';
-import { IsBoolean, IsString } from 'class-validator';
+import { IsBoolean, IsInt, IsString } from 'class-validator';
 import { Column, Entity, OneToMany } from 'typeorm';
 import { BaseEntity } from '../../common/entity/base.entity';
 import { RoleToAccount } from './role-account.entity';
@@ -26,6 +26,7 @@ export class Account extends BaseEntity {
   @Column({ nullable: false, default: false })
   verified: boolean;
 
+  @IsInt()
   @Column({ type: 'int', default: 0 })
   status: number; // 0: normal, 10: require_reset, 100: disabled
 }

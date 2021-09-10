@@ -3,13 +3,14 @@ import { Observable } from 'rxjs';
 import { CustomError, ErrCodes } from '../errors/errors';
 import lodash from 'lodash';
 import { Reflector } from '@nestjs/core';
+import { MetadataKey } from '../constants/metadata';
 
 @Injectable()
 export class SelfGuard implements CanActivate {
   constructor(private reflector: Reflector) {}
 
   canActivate(context: ExecutionContext): boolean | Promise<boolean> | Observable<boolean> {
-    const userIdPath = this.reflector.get<string>('userIdPath', context.getHandler());
+    const userIdPath = this.reflector.get<string>(MetadataKey.USER_ID_PATH, context.getHandler());
     const request = context.switchToHttp().getRequest();
     const userFromToken = request.custom.userId;
     const userFromParam = lodash.get(request, userIdPath);

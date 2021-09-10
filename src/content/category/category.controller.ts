@@ -1,0 +1,72 @@
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  Query,
+  UseGuards,
+} from '@nestjs/common';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { Pagination } from '../../common/dto/query-options.dto';
+import { ContentCategoryPerms } from '../../constants/permissions';
+import { Permission } from '../../decorators/permission.decorator';
+import { User } from '../../decorators/user.decorator';
+import { JwtGuard } from '../../guards/jwt.guard';
+import { CategoryService } from './category.service';
+import { CreateCategoryDto } from './dto/create-category.dto';
+import { UpdateCategoryDto } from './dto/update-category.dto';
+
+@Controller('category')
+@UseGuards(JwtGuard)
+@ApiBearerAuth()
+@ApiTags('ContentCategory')
+export class CategoryController {
+  constructor(private readonly categoryService: CategoryService) {}
+
+  @Post()
+  @Permission([ContentCategoryPerms.CREATE])
+  create(@User() operator: string, @Body() createCategoryDto: CreateCategoryDto) {
+    return this.categoryService.create({
+      ...createCategoryDto,
+      updatedBy: operator,
+      createdBy: operator,
+    });
+  }
+
+  @Get()
+  @Permission([ContentCategoryPerms.READ])
+  findAll(@Query() options: Pagination) {
+    return this.categoryService.findAll(options);
+  }
+
+  @Get(':id')
+  @Permission([ContentCategoryPerms.READ])
+  findOne(@Param('id') id: string) {
+    return this.categoryService.findOne(id);
+  }
+
+  @Get(':id/children')
+  @Permission([ContentCategoryPerms.READ])
+  findChildren(@Param('id') id: string) {
+    return this.categoryService.findChildren(id);
+  }
+
+  @Patch(':id')
+  @Permission([ContentCategoryPerms.EDIT])
+  update(
+    @User() operator: string,
+    @Param('id') id: string,
+    @Body() updateCategoryDto: UpdateCategoryDto,
+  ) {
+    return this.categoryService.update(id, { ...updateCategoryDto, updatedBy: operator });
+  }
+
+  @Delete(':id')
+  @Permission([ContentCategoryPerms.DELETE])
+  remove(@Param('id') id: string) {
+    return this.categoryService.remove(id);
+  }
+}

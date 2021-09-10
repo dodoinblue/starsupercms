@@ -7,6 +7,7 @@ import { AuthModule } from './auth/auth.module';
 import { HelperModule } from './helper/helper.module';
 import { ProcessRequestContextMiddleware } from './middleware/process-request-context.middleware';
 import { ProfilesModule } from './profile/profile.module';
+import { ContentModule } from './content/content.module';
 
 @Module({
   imports: [
@@ -19,6 +20,7 @@ import { ProfilesModule } from './profile/profile.module';
     }),
     AuthModule,
     ProfilesModule,
+    ContentModule,
   ],
   controllers: [AppController],
 })

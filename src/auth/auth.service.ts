@@ -11,6 +11,7 @@ import { AccountVerifyToken } from './entity/account-verify-token.entity';
 import { randomNumberString } from '../utils/nanoid';
 import dayjs from 'dayjs';
 import { AccountTokenPurpose, AccountType } from './auth.interface';
+import { JwtPayload, JwtSigned } from './interface/auth.interface';
 
 @Injectable()
 export class AuthService {
@@ -22,13 +23,21 @@ export class AuthService {
     private verifyTokenRepo: Repository<AccountVerifyToken>,
   ) {}
 
-  async createAuthToken(account: Partial<Account>) {
-    const expiresIn = AUTH.jwt.expiresIn;
-    const secretOrKey = AUTH.jwt.secretOrKey;
-    const payload = {
-      ...lodash.pick(account, ['username', 'roles']),
+  async createAuthTokenFromAccount(account: Partial<Account>): Promise<JwtSigned> {
+    const payload: JwtPayload = {
+      username: account.username,
       userId: account.id,
     };
+    const roleToAccounts = account.roleToAccounts;
+    if (roleToAccounts && roleToAccounts.length > 0) {
+      payload.roles = roleToAccounts.map((r2a) => r2a.role.key);
+    }
+    return this.createAuthTokenFromPayload(payload);
+  }
+
+  async createAuthTokenFromPayload(payload: JwtPayload) {
+    const expiresIn = AUTH.jwt.expiresIn;
+    const secretOrKey = AUTH.jwt.secretOrKey;
     const token = jwt.sign(payload, secretOrKey, { expiresIn });
     return {
       expires_in: expiresIn,
@@ -119,8 +128,10 @@ export class AuthService {
         username: email,
         type: AccountType.Email,
       },
-      select: ['id', 'username', 'type', 'password', 'verified', 'status'],
+      relations: ['roleToAccounts', 'roleToAccounts.role'],
+      select: ['id', 'username', 'type', 'password', 'verified', 'status', 'roleToAccounts'],
     });
+
     if (!accountFromDb) {
       throw new CustomError(
         ErrCodes.AUTH_USER_NOT_FOUND,
@@ -139,7 +150,7 @@ export class AuthService {
     const isValidPass = await bcrypt.compare(password, accountFromDb.password);
 
     if (isValidPass) {
-      return await this.createAuthToken(accountFromDb);
+      return await this.createAuthTokenFromAccount(accountFromDb);
     } else {
       throw new CustomError(
         ErrCodes.AUTH_WRONG_CREDENTIAL,

@@ -1,5 +1,6 @@
 import { Body, Controller, HttpCode, Post, Req, UseGuards } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import lodash from 'lodash';
 import { APP_INFO, AUTH } from '../config/configurations';
 import { JwtGuard } from '../guards/jwt.guard';
 import { EmailService } from '../helper/email.service';
@@ -109,9 +110,8 @@ export class AuthController {
   @UseGuards(JwtGuard)
   @HttpCode(200)
   async renewalToken(@Req() { custom }) {
-    return await this.authService.createAuthToken({
-      id: custom.userId,
-      username: custom.username,
-    });
+    return await this.authService.createAuthTokenFromPayload(
+      lodash.pick(custom, ['userId', 'username', 'roles']),
+    );
   }
 }
