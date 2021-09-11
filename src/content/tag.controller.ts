@@ -1,27 +1,14 @@
-import {
-  Controller,
-  Get,
-  Post,
-  Body,
-  Patch,
-  Param,
-  Delete,
-  Query,
-  UseGuards,
-  Req,
-} from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Query, Req } from '@nestjs/common';
 import { TagService } from './tag.service';
 import { CreateTagDto, UpdateTagDto } from './dto/tag.dto';
 import { Pagination } from '../common/dto/query-options.dto';
-import { JwtGuard } from '../guards/jwt.guard';
-import { ApiBearerAuth } from '@nestjs/swagger';
 import { attachUserIdToDto } from '../utils/attach-uid';
 import { TagPerms } from '../constants/permissions';
 import { Permission } from '../decorators/permission.decorator';
+import { ApiTags } from '@nestjs/swagger';
 
-@Controller('Tag')
-@ApiBearerAuth()
-@UseGuards(JwtGuard)
+@Controller('tag')
+@ApiTags('Tag')
 export class TagController {
   constructor(private readonly tagService: TagService) {}
 

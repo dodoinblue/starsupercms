@@ -1,27 +1,13 @@
-import {
-  Controller,
-  Get,
-  Post,
-  Body,
-  Patch,
-  Param,
-  Delete,
-  Query,
-  UseGuards,
-  Req,
-} from '@nestjs/common';
-import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Query, Req } from '@nestjs/common';
+import { ApiTags } from '@nestjs/swagger';
 import { Pagination } from '../common/dto/query-options.dto';
 import { ContentCategoryPerms } from '../constants/permissions';
 import { Permission } from '../decorators/permission.decorator';
-import { JwtGuard } from '../guards/jwt.guard';
 import { attachUserIdToDto } from '../utils/attach-uid';
 import { CategoryService } from './category.service';
 import { CreateCategoryDto, UpdateCategoryDto } from './dto/category.dto';
 
 @Controller('content/category')
-@UseGuards(JwtGuard)
-@ApiBearerAuth()
 @ApiTags('ContentCategory')
 export class CategoryController {
   constructor(private readonly categoryService: CategoryService) {}
@@ -34,19 +20,16 @@ export class CategoryController {
   }
 
   @Get()
-  @Permission([ContentCategoryPerms.READ])
   findAll(@Query() options: Pagination) {
     return this.categoryService.findAll(options);
   }
 
   @Get(':id')
-  @Permission([ContentCategoryPerms.READ])
   findOne(@Param('id') id: string) {
     return this.categoryService.findOne(id);
   }
 
   @Get(':id/children')
-  @Permission([ContentCategoryPerms.READ])
   findChildren(@Param('id') id: string) {
     return this.categoryService.findChildren(id);
   }
