@@ -1,9 +1,4 @@
-import {
-  CallHandler,
-  ExecutionContext,
-  Injectable,
-  NestInterceptor,
-} from '@nestjs/common';
+import { CallHandler, ExecutionContext, Injectable, NestInterceptor } from '@nestjs/common';
 import { Observable, tap } from 'rxjs';
 import { appEnv } from '../config/environment';
 
@@ -18,8 +13,6 @@ export class LoggingInterceptor implements NestInterceptor {
     const content = request.method + ' -> ' + request.url;
     console.log('+++Request:', content);
     const now = Date.now();
-    return call$.pipe(
-      tap(() => console.log('+++Response: ', content, `${Date.now() - now}ms`)),
-    );
+    return call$.pipe(tap(() => console.log('+++Response: ', content, `${Date.now() - now}ms`)));
   }
 }

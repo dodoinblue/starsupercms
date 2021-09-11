@@ -3,20 +3,21 @@ import {
   Controller,
   Delete,
   Get,
-  HttpCode,
   HttpStatus,
   Param,
-  Post,
+  Patch,
+  Put,
+  Req,
   UseGuards,
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { Self } from '../decorators/self.decorator';
-import { User } from '../decorators/user.decorator';
 import { JwtGuard } from '../guards/jwt.guard';
 import { ProfileDto } from './dto/profile.dto';
 import { ProfilesService } from './profiles.service';
 import lodash from 'lodash';
 import { CustomError, ErrCodes } from '../errors/errors';
+import { attachUserIdToDto } from '../utils/attach-uid';
 
 @Controller('profile')
 @ApiBearerAuth()
@@ -25,25 +26,16 @@ import { CustomError, ErrCodes } from '../errors/errors';
 export class ProfilesController {
   constructor(private readonly profileService: ProfilesService) {}
 
-  @Get()
-  async queryProfile() {
-    // todo
-  }
-
   @Get('users/:userId')
   @Self()
   async getProfile(@Param('userId') userId: string) {
     return await this.profileService.findOne(userId);
   }
 
-  // Create or update
-  @Post('users/:userId')
+  // Create
+  @Put('users/:userId')
   @Self()
-  async createProfile(
-    @Param('userId') userId: string,
-    @User() operator: string,
-    @Body() dto: ProfileDto,
-  ) {
+  async createProfile(@Param('userId') userId: string, @Body() dto: ProfileDto, @Req() request) {
     if (lodash.isEmpty(dto)) {
       throw new CustomError(
         ErrCodes.VALIDATION_ERROR,
@@ -51,7 +43,23 @@ export class ProfilesController {
         HttpStatus.BAD_REQUEST,
       );
     }
-    return await this.profileService.createOrUpdate(userId, operator, dto);
+    attachUserIdToDto(request, dto);
+    return await this.profileService.createProfileByUserId(userId, dto);
+  }
+
+  // Update
+  @Patch('users/:userId')
+  @Self()
+  async updateProfile(@Param('userId') userId: string, @Body() dto: ProfileDto, @Req() request) {
+    if (lodash.isEmpty(dto)) {
+      throw new CustomError(
+        ErrCodes.VALIDATION_ERROR,
+        'Body should not be empty',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+    attachUserIdToDto(request, dto, ['updatedBy']);
+    return await this.profileService.updateProfileByUserId(userId, dto);
   }
 
   @Delete('users/:userId')

@@ -8,18 +8,19 @@ import {
   Delete,
   Query,
   UseGuards,
+  Req,
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { Pagination } from '../../common/dto/query-options.dto';
 import { ContentCategoryPerms } from '../../constants/permissions';
 import { Permission } from '../../decorators/permission.decorator';
-import { User } from '../../decorators/user.decorator';
 import { JwtGuard } from '../../guards/jwt.guard';
+import { attachUserIdToDto } from '../../utils/attach-uid';
 import { CategoryService } from './category.service';
 import { CreateCategoryDto } from './dto/create-category.dto';
 import { UpdateCategoryDto } from './dto/update-category.dto';
 
-@Controller('category')
+@Controller('content/category')
 @UseGuards(JwtGuard)
 @ApiBearerAuth()
 @ApiTags('ContentCategory')
@@ -28,12 +29,9 @@ export class CategoryController {
 
   @Post()
   @Permission([ContentCategoryPerms.CREATE])
-  create(@User() operator: string, @Body() createCategoryDto: CreateCategoryDto) {
-    return this.categoryService.create({
-      ...createCategoryDto,
-      updatedBy: operator,
-      createdBy: operator,
-    });
+  create(@Body() createCategoryDto: CreateCategoryDto, @Req() request) {
+    attachUserIdToDto(request, createCategoryDto);
+    return this.categoryService.create(createCategoryDto);
   }
 
   @Get()
@@ -56,15 +54,12 @@ export class CategoryController {
 
   @Patch(':id')
   @Permission([ContentCategoryPerms.EDIT])
-  update(
-    @User() operator: string,
-    @Param('id') id: string,
-    @Body() updateCategoryDto: UpdateCategoryDto,
-  ) {
-    return this.categoryService.update(id, { ...updateCategoryDto, updatedBy: operator });
+  update(@Param('id') id: string, @Body() updateCategoryDto: UpdateCategoryDto, @Req() request) {
+    attachUserIdToDto(request, updateCategoryDto);
+    return this.categoryService.update(id, updateCategoryDto);
   }
 
-  @Delete(':id')
+  @Delete(':id/cascade')
   @Permission([ContentCategoryPerms.DELETE])
   remove(@Param('id') id: string) {
     return this.categoryService.remove(id);

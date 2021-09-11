@@ -1,5 +1,6 @@
 import { HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { omit } from 'lodash';
 import { DeepPartial, Repository } from 'typeorm';
 import { Account } from '../auth/entity/account.entity';
 import { CustomError, ErrCodes } from '../errors/errors';
@@ -23,21 +24,15 @@ export class ProfilesService {
     return profile;
   }
 
-  async createOrUpdate(userId: string, operator: string, dto: DeepPartial<Profile>) {
-    const existing = await this.profileRepo.findOne({ account: { id: userId } });
+  async createProfileByUserId(userId: string, dto: DeepPartial<Profile>) {
     const account = this.accountRepo.create({ id: userId });
-    const profileObj = Object.assign(
-      { createdBy: operator, account: { id: userId } },
-      existing,
-      dto,
-      {
-        updatedBy: operator,
-        account: account,
-      },
-    );
-    const profile = this.profileRepo.create(profileObj);
-    console.log(profile);
-    return await this.profileRepo.save(profile);
+    const profile = this.profileRepo.create({ ...dto, account: account });
+    return await this.profileRepo.insert(profile);
+  }
+
+  async updateProfileByUserId(userId: string, dto: DeepPartial<Profile>) {
+    const profile = this.profileRepo.create(dto);
+    return await this.profileRepo.update({ accountId: userId }, profile);
   }
 
   async delete(userId: string) {
