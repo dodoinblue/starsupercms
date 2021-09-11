@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { TreeRepository } from 'typeorm';
-import { Pagination } from '../../common/dto/query-options.dto';
+import { Pagination } from '../common/dto/query-options.dto';
 import { ContentCategory } from './entities/category.entity';
 
 @Injectable()

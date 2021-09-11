@@ -2,7 +2,7 @@ import { ApiProperty } from '@nestjs/swagger';
 import { IsOptional, IsString, Matches, MaxLength, MinLength } from 'class-validator';
 import { nanoid } from 'nanoid';
 import { Column, Entity, Tree, TreeChildren, TreeParent } from 'typeorm';
-import { BaseEntity } from '../../../common/entity/base.entity';
+import { BaseEntity } from '../../common/entity/base.entity';
 
 @Entity()
 @Tree('materialized-path')

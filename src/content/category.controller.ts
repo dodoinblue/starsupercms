@@ -11,14 +11,13 @@ import {
   Req,
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { Pagination } from '../../common/dto/query-options.dto';
-import { ContentCategoryPerms } from '../../constants/permissions';
-import { Permission } from '../../decorators/permission.decorator';
-import { JwtGuard } from '../../guards/jwt.guard';
-import { attachUserIdToDto } from '../../utils/attach-uid';
+import { Pagination } from '../common/dto/query-options.dto';
+import { ContentCategoryPerms } from '../constants/permissions';
+import { Permission } from '../decorators/permission.decorator';
+import { JwtGuard } from '../guards/jwt.guard';
+import { attachUserIdToDto } from '../utils/attach-uid';
 import { CategoryService } from './category.service';
-import { CreateCategoryDto } from './dto/create-category.dto';
-import { UpdateCategoryDto } from './dto/update-category.dto';
+import { CreateCategoryDto, UpdateCategoryDto } from './dto/category.dto';
 
 @Controller('content/category')
 @UseGuards(JwtGuard)

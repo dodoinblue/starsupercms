@@ -1,4 +1,4 @@
-import { PickType } from '@nestjs/swagger';
+import { PartialType, PickType } from '@nestjs/swagger';
 import { ContentCategory } from '../entities/category.entity';
 
 export class CreateCategoryDto extends PickType(ContentCategory, [
@@ -7,3 +7,5 @@ export class CreateCategoryDto extends PickType(ContentCategory, [
   'slug',
   'parentId',
 ]) {}
+
+export class UpdateCategoryDto extends PartialType(CreateCategoryDto) {}
