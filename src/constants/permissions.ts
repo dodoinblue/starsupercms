@@ -22,3 +22,9 @@ export enum ArticlePerms {
   EDIT = 'edit_article',
   DELETE = 'delete_article',
 }
+
+export enum TagPerms {
+  CREATE = 'create_tag',
+  EDIT = 'edit_tag',
+  DELETE = 'delete_tag',
+}

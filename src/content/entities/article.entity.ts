@@ -7,8 +7,9 @@ import {
   MaxLength,
   MinLength,
 } from 'class-validator';
-import { Column, Entity, ManyToOne } from 'typeorm';
+import { Column, Entity, ManyToOne, OneToMany } from 'typeorm';
 import { BaseEntity } from '../../common/entity/base.entity';
+import { ArticleToTag } from './article-tag.entity';
 import { ContentCategory } from './category.entity';
 
 @Entity()
@@ -63,4 +64,7 @@ export class Article extends BaseEntity {
   @Column({ nullable: true })
   @IsOptional()
   categoryId?: string;
+
+  @OneToMany(() => ArticleToTag, (a2t) => a2t.article)
+  articleToTags: ArticleToTag[];
 }

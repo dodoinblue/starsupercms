@@ -1,7 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Brackets, Like, Repository } from 'typeorm';
+import { Brackets, In, Like, Repository } from 'typeorm';
 import { QueryArticleOptions } from './dto/article.dto';
+import { ArticleToTag } from './entities/article-tag.entity';
 import { Article } from './entities/article.entity';
 
 @Injectable()
@@ -9,6 +10,9 @@ export class ArticleService {
   constructor(
     @InjectRepository(Article)
     private articleRepo: Repository<Article>,
+
+    @InjectRepository(ArticleToTag)
+    private a2tRepo: Repository<ArticleToTag>,
   ) {}
 
   create(dto: Partial<Article>) {
@@ -58,5 +62,16 @@ export class ArticleService {
 
   remove(id: string) {
     return this.articleRepo.delete(id);
+  }
+
+  async applyTags(articleId: string, tagIds: string[], userId: string) {
+    const articleToTags = tagIds.map((tagId) =>
+      this.a2tRepo.create({ tagId, articleId, createdBy: userId, updatedBy: userId }),
+    );
+    return await this.a2tRepo.save(articleToTags);
+  }
+
+  async removeTags(articleId: string, tagIds: string[]) {
+    return await this.a2tRepo.delete({ articleId, tagId: In(tagIds) });
   }
 }
