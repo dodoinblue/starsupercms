@@ -16,3 +16,9 @@ export enum RolePerms {
   EDIT = 'edit_role',
   DELETE = 'delete_role',
 }
+
+export enum ArticlePerms {
+  CREATE = 'create_article',
+  EDIT = 'edit_article',
+  DELETE = 'delete_article',
+}

@@ -1,9 +1,9 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsOptional, IsString, Matches, MaxLength, MinLength } from 'class-validator';
-import { nanoid } from 'nanoid';
+import { nanoid } from '../../utils/nanoid';
 import { Column, Entity, OneToMany, Tree, TreeChildren, TreeParent } from 'typeorm';
 import { BaseEntity } from '../../common/entity/base.entity';
-import { CategoryToArticle } from './article-to-catetory.entity';
+import { Article } from './article.entity';
 
 @Entity()
 @Tree('materialized-path')
@@ -40,8 +40,8 @@ export class ContentCategory extends BaseEntity {
   @Column({ nullable: true })
   parentId?: string;
 
-  @OneToMany(() => CategoryToArticle, (c2a) => c2a.category)
-  categoryToArticles!: CategoryToArticle[];
+  @OneToMany(() => Article, (article) => article.category)
+  articles: Article[];
 
   generateId() {
     console.log('child before insert');

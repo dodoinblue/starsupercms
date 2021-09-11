@@ -1,38 +1,66 @@
-import { IsInt, IsString } from 'class-validator';
-import { Column, Entity, OneToMany } from 'typeorm';
+import {
+  IsAlphanumeric,
+  IsInt,
+  IsOptional,
+  IsString,
+  Matches,
+  MaxLength,
+  MinLength,
+} from 'class-validator';
+import { Column, Entity, ManyToOne } from 'typeorm';
 import { BaseEntity } from '../../common/entity/base.entity';
-import { CategoryToArticle } from './article-to-catetory.entity';
+import { ContentCategory } from './category.entity';
 
 @Entity()
 export class Article extends BaseEntity {
   @IsString()
+  @MinLength(3)
   @Column()
   title: string;
+
+  @Matches(/^[A-Za-z0-9_\-]+$/, {
+    message: `Only 0-9 a-z A-Z - _ are allowed`,
+  })
+  @MinLength(3)
+  @MaxLength(64)
+  @Column({ nullable: false, unique: true })
+  slug: string;
 
   @IsString()
   @Column({ type: 'text' })
   content: string;
 
   @IsString()
-  @Column()
+  @IsOptional()
+  @Column({ nullable: true })
   intro: string;
 
   @IsString()
-  @Column()
+  @IsOptional()
+  @Column({ nullable: true })
   cover: string;
 
-  @IsString()
+  @IsAlphanumeric()
+  @MinLength(3)
+  @MaxLength(12)
+  @IsOptional()
   @Column({ nullable: true })
   password: string;
 
   @IsString({ each: true })
-  @Column('simple-array')
+  @IsOptional()
+  @Column('simple-array', { nullable: true })
   keywords: string[];
 
   @IsInt()
+  @IsOptional()
   @Column({ default: 0 })
   state: number; // 0: draft, 100: under review, 200: published
 
-  @OneToMany(() => CategoryToArticle, (c2a) => c2a.article)
-  categoryToArticles!: CategoryToArticle[];
+  @ManyToOne(() => ContentCategory, (category) => category.articles)
+  category: ContentCategory;
+
+  @Column({ nullable: true })
+  @IsOptional()
+  categoryId?: string;
 }
