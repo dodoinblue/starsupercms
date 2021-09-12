@@ -12,7 +12,7 @@ import { BaseEntity } from '../../common/entity/base.entity';
 import { Like } from '../like/entities/like.entity';
 import { ArticleToTag } from './article-tag.entity';
 import { ContentCategory } from './category.entity';
-
+import { Comment } from '../comment/entities/comment.entity';
 @Entity()
 export class Article extends BaseEntity {
   @IsString()
@@ -71,4 +71,7 @@ export class Article extends BaseEntity {
 
   @OneToMany(() => Like, (like) => like.article)
   likes: Like[];
+
+  @OneToMany(() => Comment, (comment) => comment.article)
+  comments: Comment[];
 }

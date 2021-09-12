@@ -11,9 +11,10 @@ import { Tag } from './entities/tag.entity';
 import { TagController } from './tag.controller';
 import { TagService } from './tag.service';
 import { LikeModule } from './like/like.module';
+import { CommentModule } from './comment/comment.module';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([ContentCategory, Article, Tag, ArticleToTag]), LikeModule],
+  imports: [TypeOrmModule.forFeature([ContentCategory, Article, Tag, ArticleToTag]), LikeModule, CommentModule],
   controllers: [CategoryController, ArticleController, TagController],
   providers: [CategoryService, ArticleService, TagService],
 })

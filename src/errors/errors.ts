@@ -15,6 +15,7 @@ export enum ErrCodes {
   // Generic
   VALIDATION_ERROR = 'VALIDATION_ERROR',
   NOT_FOUND = 'NOT_FOUND',
+  FORBIDDEN = 'FORBIDDEN',
 }
 
 export class CustomError extends HttpException {

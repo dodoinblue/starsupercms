@@ -51,6 +51,14 @@ export class CacheService {
     return cmdPromise(key, field);
   }
 
+  public HSET(key: string, field: string, value: any) {
+    if (!this.checkCacheServiceAvailable) {
+      return Promise.reject('Redis client not ready');
+    }
+    const cmdPromise = promisify(this.redisClient.HSET).bind(this.redisClient);
+    return cmdPromise(key, field, value);
+  }
+
   public HINCRBY(key: string, field: string, by: number) {
     if (!this.checkCacheServiceAvailable) {
       return Promise.reject('Redis client not ready');
