@@ -8,13 +8,17 @@ import { HelperModule } from './helper/helper.module';
 import { ProcessRequestContextMiddleware } from './middleware/process-request-context.middleware';
 import { ProfilesModule } from './profile/profile.module';
 import { ContentModule } from './content/content.module';
+import { CacheModule } from './cache/redis-cache.module';
+import { APP_INTERCEPTOR } from '@nestjs/core';
+import { HttpCacheInterceptor } from './interceptors/cache.interceptor';
 
 @Module({
   imports: [
     HelperModule,
+    CacheModule,
     TypeOrmModule.forRoot({
       ...(TYPEORM_DB as any),
-      logging: 'all',
+      // logging: 'all',
       entities: [__dirname + '/**/*.entity{.ts,.js}'],
       synchronize: appEnv.isDevMode,
     }),
@@ -23,6 +27,7 @@ import { ContentModule } from './content/content.module';
     ContentModule,
   ],
   controllers: [AppController],
+  providers: [{ provide: APP_INTERCEPTOR, useClass: HttpCacheInterceptor }],
 })
 export class AppModule {
   configure(consumer: MiddlewareConsumer) {

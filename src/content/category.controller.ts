@@ -2,6 +2,7 @@ import { Controller, Get, Post, Body, Patch, Param, Delete, Query, Req } from '@
 import { ApiTags } from '@nestjs/swagger';
 import { Pagination } from '../common/dto/query-options.dto';
 import { ContentCategoryPerms } from '../constants/permissions';
+import { HttpCache } from '../decorators/http-cache.decorator';
 import { Permission } from '../decorators/permission.decorator';
 import { attachUserIdToDto } from '../utils/attach-uid';
 import { CategoryService } from './category.service';
@@ -20,11 +21,13 @@ export class CategoryController {
   }
 
   @Get()
+  @HttpCache({ ttl: 360 })
   findAll(@Query() options: Pagination) {
     return this.categoryService.findAll(options);
   }
 
   @Get(':id')
+  @HttpCache({ ttl: 360 })
   findOne(@Param('id') id: string) {
     return this.categoryService.findOne(id);
   }
