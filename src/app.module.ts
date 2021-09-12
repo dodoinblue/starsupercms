@@ -18,7 +18,7 @@ import { HttpCacheInterceptor } from './interceptors/cache.interceptor';
     CacheModule,
     TypeOrmModule.forRoot({
       ...(TYPEORM_DB as any),
-      // logging: 'all',
+      logging: 'all',
       entities: [__dirname + '/**/*.entity{.ts,.js}'],
       synchronize: appEnv.isDevMode,
     }),

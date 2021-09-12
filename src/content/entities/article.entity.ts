@@ -9,6 +9,7 @@ import {
 } from 'class-validator';
 import { Column, Entity, ManyToOne, OneToMany } from 'typeorm';
 import { BaseEntity } from '../../common/entity/base.entity';
+import { Like } from '../like/entities/like.entity';
 import { ArticleToTag } from './article-tag.entity';
 import { ContentCategory } from './category.entity';
 
@@ -67,4 +68,7 @@ export class Article extends BaseEntity {
 
   @OneToMany(() => ArticleToTag, (a2t) => a2t.article)
   articleToTags: ArticleToTag[];
+
+  @OneToMany(() => Like, (like) => like.article)
+  likes: Like[];
 }

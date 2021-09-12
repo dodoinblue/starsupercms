@@ -2,6 +2,7 @@ import { ApiHideProperty } from '@nestjs/swagger';
 import { IsBoolean, IsInt, IsString } from 'class-validator';
 import { Column, Entity, OneToMany } from 'typeorm';
 import { BaseEntity } from '../../common/entity/base.entity';
+import { Like } from '../../content/like/entities/like.entity';
 import { RoleToAccount } from './role-account.entity';
 
 @Entity()
@@ -29,4 +30,7 @@ export class Account extends BaseEntity {
   @IsInt()
   @Column({ type: 'int', default: 0 })
   status: number; // 0: normal, 10: require_reset, 100: disabled
+
+  @OneToMany(() => Like, (like) => like.account)
+  articleLikes: Like[];
 }

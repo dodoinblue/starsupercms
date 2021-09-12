@@ -1,5 +1,6 @@
 import { CACHE_MANAGER, Inject, Injectable } from '@nestjs/common';
 import { RedisClient } from 'redis';
+import { promisify } from 'util';
 
 export interface ICacheManager {
   store: {
@@ -40,5 +41,21 @@ export class CacheService {
       return Promise.reject('Redis client not ready');
     }
     return this.cache.set(key, value, options);
+  }
+
+  public HGET(key: string, field: string) {
+    if (!this.checkCacheServiceAvailable) {
+      return Promise.reject('Redis client not ready');
+    }
+    const cmdPromise = promisify(this.redisClient.HGET).bind(this.redisClient);
+    return cmdPromise(key, field);
+  }
+
+  public HINCRBY(key: string, field: string, by: number) {
+    if (!this.checkCacheServiceAvailable) {
+      return Promise.reject('Redis client not ready');
+    }
+    const cmdPromise = promisify(this.redisClient.HINCRBY).bind(this.redisClient);
+    return cmdPromise(key, field, by);
   }
 }

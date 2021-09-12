@@ -1,18 +1,6 @@
-import {
-  Body,
-  Controller,
-  Delete,
-  Get,
-  HttpStatus,
-  Param,
-  Patch,
-  Put,
-  Req,
-  UseGuards,
-} from '@nestjs/common';
-import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { Body, Controller, Delete, Get, HttpStatus, Param, Patch, Put, Req } from '@nestjs/common';
+import { ApiTags } from '@nestjs/swagger';
 import { Self } from '../decorators/self.decorator';
-import { JwtGuard } from '../guards/jwt.guard';
 import { ProfileDto } from './dto/profile.dto';
 import { ProfilesService } from './profiles.service';
 import lodash from 'lodash';
@@ -20,9 +8,7 @@ import { CustomError, ErrCodes } from '../errors/errors';
 import { attachUserIdToDto } from '../utils/attach-uid';
 
 @Controller('profile')
-@ApiBearerAuth()
 @ApiTags('Profile')
-@UseGuards(JwtGuard)
 export class ProfilesController {
   constructor(private readonly profileService: ProfilesService) {}
 
