@@ -11,6 +11,7 @@ import { ContentModule } from './content/content.module';
 import { CacheModule } from './cache/redis-cache.module';
 import { APP_INTERCEPTOR } from '@nestjs/core';
 import { HttpCacheInterceptor } from './interceptors/cache.interceptor';
+import { MediaModule } from './media/media.module';
 
 @Module({
   imports: [
@@ -25,6 +26,7 @@ import { HttpCacheInterceptor } from './interceptors/cache.interceptor';
     AuthModule,
     ProfilesModule,
     ContentModule,
+    MediaModule,
   ],
   controllers: [AppController],
   providers: [{ provide: APP_INTERCEPTOR, useClass: HttpCacheInterceptor }],

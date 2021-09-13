@@ -16,6 +16,9 @@ export enum ErrCodes {
   VALIDATION_ERROR = 'VALIDATION_ERROR',
   NOT_FOUND = 'NOT_FOUND',
   FORBIDDEN = 'FORBIDDEN',
+
+  // Media
+  INVALID_IMG_FORMAT = 'INVALID_IMG_FORMAT',
 }
 
 export class CustomError extends HttpException {

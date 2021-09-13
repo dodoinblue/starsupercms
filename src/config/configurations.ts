@@ -52,3 +52,9 @@ export const AUTH = {
   saltRounds: 10,
   requireVerify: false,
 };
+
+export const FILE_UPLOAD = {
+  local: {
+    rootPath: `/tmp/${APP_INFO.name}`,
+  },
+};
