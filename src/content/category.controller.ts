@@ -21,13 +21,13 @@ export class CategoryController {
   }
 
   @Get()
-  @HttpCache({ ttl: 360 })
+  @HttpCache({ ttl: 300 })
   findAll(@Query() options: Pagination) {
     return this.categoryService.findAll(options);
   }
 
   @Get(':id')
-  @HttpCache({ ttl: 360 })
+  @HttpCache({ ttl: 300 })
   findOne(@Param('id') id: string) {
     return this.categoryService.findOne(id);
   }

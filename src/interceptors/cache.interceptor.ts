@@ -14,7 +14,6 @@ import {
 import { CacheService } from '../cache/redis-cache.service';
 import { REDIS } from '../config/configurations';
 import { CACHE_KEY_BY_URL, MetadataKey } from '../constants/metadata';
-import lodash from 'lodash';
 
 @Injectable()
 export class HttpCacheInterceptor implements NestInterceptor {
@@ -37,12 +36,12 @@ export class HttpCacheInterceptor implements NestInterceptor {
 
     try {
       const value = await this.cacheManager.get(key);
-      if (!lodash.isUndefined(value)) {
+      if (value != null) {
         console.log(`cache ${key} hit`);
       } else {
         console.log(`cache ${key} miss`);
       }
-      return !lodash.isUndefined(value)
+      return value != null
         ? of(value)
         : call$.pipe(tap((response) => this.cacheManager.set(key, response, { ttl })));
     } catch (error) {

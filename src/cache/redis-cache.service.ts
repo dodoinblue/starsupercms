@@ -66,4 +66,18 @@ export class CacheService {
     const cmdPromise = promisify(this.redisClient.HINCRBY).bind(this.redisClient);
     return cmdPromise(key, field, by);
   }
+
+  /**
+   *
+   * @param key
+   * @param ttl time to live in seconds
+   * @returns
+   */
+  public EXPIRE(key: string, ttl: number) {
+    if (!this.checkCacheServiceAvailable) {
+      return Promise.reject('Redis client not ready');
+    }
+    const cmdPromise = promisify(this.redisClient.EXPIRE).bind(this.redisClient);
+    return cmdPromise(key, ttl);
+  }
 }

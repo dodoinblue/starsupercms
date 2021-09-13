@@ -58,7 +58,7 @@ export class LikeService {
       `${REDIS_KEY.ArticlePrefix}@${articleId}`,
       REDIS_KEY.ArticleLikeField,
     );
-    if (lodash.isUndefined(count)) {
+    if (count == null) {
       count = await this.likeRepo.count({ articleId });
       this.cacheManager.HSET(
         `${REDIS_KEY.ArticlePrefix}@${articleId}`,

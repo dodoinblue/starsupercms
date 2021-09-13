@@ -47,7 +47,7 @@ export class CommentService {
       `${REDIS_KEY.ArticlePrefix}@${articleId}`,
       REDIS_KEY.ArticleCommentField,
     );
-    if (lodash.isUndefined(count)) {
+    if (count == null) {
       count = await this.commentRepo.count({ articleId });
       await this.cacheManager.HSET(
         `${REDIS_KEY.ArticlePrefix}@${articleId}`,
