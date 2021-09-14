@@ -1,5 +1,3 @@
-import lodash from 'lodash';
-
 /**
  * Parameter decorator is the last preprocessor before a controller executes.
  * Since we enabled whitelist in the validation pipe, any properties inserted
@@ -7,13 +5,11 @@ import lodash from 'lodash';
  * attach createdBy/updatedBy information with this utility function.
  */
 export function attachUserIdToDto(
-  request: Express.Request,
+  userId: string,
   dto: unknown,
-  mountPathes = ['createdBy', 'updatedBy'],
-  userIdPath = 'custom.userId',
+  mountPaths = ['createdBy', 'updatedBy'],
 ) {
-  const userId = lodash.get(request, userIdPath);
-  for (const path of mountPathes) {
+  for (const path of mountPaths) {
     dto[path] = userId;
   }
 }

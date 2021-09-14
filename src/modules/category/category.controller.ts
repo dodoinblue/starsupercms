@@ -1,8 +1,9 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Query, Req } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Query } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { BasicQuery } from '../../common/dto/query-options.dto';
 import { ContentCategoryPerms } from '../../constants/permissions';
 import { HttpCache } from '../../decorators/http-cache.decorator';
+import { JwtUserId } from '../../decorators/jwt-user-id.decorator';
 import { Permission } from '../../decorators/permission.decorator';
 import { SortToOrderPipe } from '../../pipes/sort-option.pipe';
 import { attachUserIdToDto } from '../../utils/attach-uid';
@@ -16,8 +17,8 @@ export class CategoryController {
 
   @Post()
   @Permission([ContentCategoryPerms.CREATE])
-  create(@Body() createCategoryDto: CreateCategoryDto, @Req() request) {
-    attachUserIdToDto(request, createCategoryDto);
+  create(@Body() createCategoryDto: CreateCategoryDto, @JwtUserId() userId: string) {
+    attachUserIdToDto(userId, createCategoryDto);
     return this.categoryService.create(createCategoryDto);
   }
 
@@ -40,8 +41,12 @@ export class CategoryController {
 
   @Patch(':id')
   @Permission([ContentCategoryPerms.EDIT])
-  update(@Param('id') id: string, @Body() updateCategoryDto: UpdateCategoryDto, @Req() request) {
-    attachUserIdToDto(request, updateCategoryDto);
+  update(
+    @Param('id') id: string,
+    @Body() updateCategoryDto: UpdateCategoryDto,
+    @JwtUserId() userId: string,
+  ) {
+    attachUserIdToDto(userId, updateCategoryDto);
     return this.categoryService.update(id, updateCategoryDto);
   }
 

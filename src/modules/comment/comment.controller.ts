@@ -7,11 +7,11 @@ import {
   Param,
   Delete,
   Query,
-  Req,
   UseGuards,
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { BasicQuery } from '../../common/dto/query-options.dto';
+import { JwtUserId } from '../../decorators/jwt-user-id.decorator';
 import { JwtGuard } from '../../guards/jwt.guard';
 import { SortToOrderPipe } from '../../pipes/sort-option.pipe';
 import { attachUserIdToDto } from '../../utils/attach-uid';
@@ -26,8 +26,8 @@ export class CommentController {
   @Post()
   @UseGuards(JwtGuard)
   @ApiBearerAuth()
-  create(@Body() createCommentDto: CreateCommentDto, @Req() request) {
-    attachUserIdToDto(request, createCommentDto);
+  create(@Body() createCommentDto: CreateCommentDto, @JwtUserId() userId: string) {
+    attachUserIdToDto(userId, createCommentDto);
     return this.commentService.create(createCommentDto);
   }
 
@@ -47,9 +47,8 @@ export class CommentController {
   update(
     @Param('commentId') commentId: string,
     @Body() updateCommentDto: UpdateCommentDto,
-    @Req() request,
+    @JwtUserId() userId: string,
   ) {
-    const userId = request.custom.userId;
     return this.commentService.update(commentId, updateCommentDto, userId);
   }
 
@@ -57,9 +56,7 @@ export class CommentController {
   @UseGuards(JwtGuard)
   @ApiBearerAuth()
   @ApiOperation({ description: 'Soft delete comment so child comments will be preserved.' })
-  remove(@Param('commentId') commentId: string, @Req() request) {
-    const userId = request.custom.userId;
-
+  remove(@Param('commentId') commentId: string, @JwtUserId() userId: string) {
     return this.commentService.remove(commentId, userId);
   }
 }

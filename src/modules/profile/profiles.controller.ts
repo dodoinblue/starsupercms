@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, HttpStatus, Param, Patch, Put, Req } from '@nestjs/common';
+import { Body, Controller, Delete, Get, HttpStatus, Param, Patch, Put } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { Self } from '../../decorators/self.decorator';
 import { ProfileDto } from './dto/profile.dto';
@@ -6,6 +6,7 @@ import { ProfilesService } from './profiles.service';
 import lodash from 'lodash';
 import { CustomError, ErrCodes } from '../../errors/errors';
 import { attachUserIdToDto } from '../../utils/attach-uid';
+import { JwtUserId } from '../../decorators/jwt-user-id.decorator';
 
 @Controller('profile')
 @ApiTags('Profile')
@@ -21,7 +22,11 @@ export class ProfilesController {
   // Create
   @Put('users/:userId')
   @Self()
-  async createProfile(@Param('userId') userId: string, @Body() dto: ProfileDto, @Req() request) {
+  async createProfile(
+    @Param('userId') userId: string,
+    @Body() dto: ProfileDto,
+    @JwtUserId() jwtUserId,
+  ) {
     if (lodash.isEmpty(dto)) {
       throw new CustomError(
         ErrCodes.VALIDATION_ERROR,
@@ -29,14 +34,20 @@ export class ProfilesController {
         HttpStatus.BAD_REQUEST,
       );
     }
-    attachUserIdToDto(request, dto);
+    // Just in case we allow admins to change user's profile.
+    // Then editor & creator may not be the same user.
+    attachUserIdToDto(jwtUserId, dto);
     return await this.profileService.createProfileByUserId(userId, dto);
   }
 
   // Update
   @Patch('users/:userId')
   @Self()
-  async updateProfile(@Param('userId') userId: string, @Body() dto: ProfileDto, @Req() request) {
+  async updateProfile(
+    @Param('userId') userId: string,
+    @Body() dto: ProfileDto,
+    @JwtUserId() jwtUserId: string,
+  ) {
     if (lodash.isEmpty(dto)) {
       throw new CustomError(
         ErrCodes.VALIDATION_ERROR,
@@ -44,7 +55,7 @@ export class ProfilesController {
         HttpStatus.BAD_REQUEST,
       );
     }
-    attachUserIdToDto(request, dto, ['updatedBy']);
+    attachUserIdToDto(jwtUserId, dto, ['updatedBy']);
     return await this.profileService.updateProfileByUserId(userId, dto);
   }
 

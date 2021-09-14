@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Query, Req } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Query } from '@nestjs/common';
 import { TagService } from './tag.service';
 import { ApiTags } from '@nestjs/swagger';
 import { BasicQuery } from '../../common/dto/query-options.dto';
@@ -7,6 +7,7 @@ import { Permission } from '../../decorators/permission.decorator';
 import { attachUserIdToDto } from '../../utils/attach-uid';
 import { CreateTagDto, UpdateTagDto } from './dto/tag.dto';
 import { SortToOrderPipe } from '../../pipes/sort-option.pipe';
+import { JwtUserId } from '../../decorators/jwt-user-id.decorator';
 
 @Controller('tag')
 @ApiTags('Tag')
@@ -15,8 +16,8 @@ export class TagController {
 
   @Post()
   @Permission([TagPerms.CREATE])
-  create(@Body() createTagDto: CreateTagDto, @Req() request) {
-    attachUserIdToDto(request, createTagDto);
+  create(@Body() createTagDto: CreateTagDto, @JwtUserId() userId: string) {
+    attachUserIdToDto(userId, createTagDto);
     return this.tagService.create(createTagDto);
   }
 
@@ -32,8 +33,8 @@ export class TagController {
 
   @Patch(':id')
   @Permission([TagPerms.EDIT])
-  update(@Param('id') id: string, @Body() updateTagDto: UpdateTagDto, @Req() request) {
-    attachUserIdToDto(request, updateTagDto, ['updatedBy']);
+  update(@Param('id') id: string, @Body() updateTagDto: UpdateTagDto, @JwtUserId() userId: string) {
+    attachUserIdToDto(userId, updateTagDto, ['updatedBy']);
     return this.tagService.update(id, updateTagDto);
   }
 

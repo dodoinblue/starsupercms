@@ -14,6 +14,7 @@ import {
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { BasicQuery } from '../../common/dto/query-options.dto';
+import { JwtUserId } from '../../decorators/jwt-user-id.decorator';
 import { JwtGuard } from '../../guards/jwt.guard';
 import { SortToOrderPipe } from '../../pipes/sort-option.pipe';
 import { attachUserIdToDto } from '../../utils/attach-uid';
@@ -35,8 +36,8 @@ export class RolesController {
 
   @Post()
   @HttpCode(HttpStatus.CREATED)
-  async create(@Body() dto: CreateRoleDto, @Req() request) {
-    attachUserIdToDto(request, dto);
+  async create(@Body() dto: CreateRoleDto, @JwtUserId() userId: string) {
+    attachUserIdToDto(userId, dto);
     return await this.roleService.create(dto);
   }
 
@@ -48,8 +49,12 @@ export class RolesController {
 
   @Patch(':roleId')
   @HttpCode(HttpStatus.NO_CONTENT)
-  async update(@Param('roleId') roleId: string, @Body() dto: UpdateRoleDto, @Req() request) {
-    attachUserIdToDto(request, dto, ['updatedBy']);
+  async update(
+    @Param('roleId') roleId: string,
+    @Body() dto: UpdateRoleDto,
+    @JwtUserId() userId: string,
+  ) {
+    attachUserIdToDto(userId, dto, ['updatedBy']);
     return await this.roleService.updateById(roleId, dto);
   }
 
@@ -68,10 +73,9 @@ export class RolesController {
   assignMembers(
     @Param('roleId') roleId: string,
     @Body() { memberIds: memberIds }: AssignRoleMembers,
-    @Req() request,
+    @JwtUserId() userId: string,
   ) {
-    const operator = request.custom.userId;
-    return this.roleService.assignMembers(roleId, memberIds, operator);
+    return this.roleService.assignMembers(roleId, memberIds, userId);
   }
 
   @Delete(':roleId/members/:memberIds')
