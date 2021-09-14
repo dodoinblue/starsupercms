@@ -17,7 +17,7 @@ export class LikeService {
   ) {}
 
   async likeArticle(accountId: string, articleId: string) {
-    const like = this.likeRepo.create({ accountId, articleId });
+    const like = this.likeRepo.create({ accountId, itemId: articleId });
     const likeResponse = await this.likeRepo.insert(like);
     // this.cacheManager.HINCRBY(
     //   `${REDIS_KEY.ArticlePrefix}@${articleId}`,
@@ -28,7 +28,7 @@ export class LikeService {
   }
 
   async unlikeArticle(accountId: string, articleId: string) {
-    const like = this.likeRepo.create({ accountId, articleId });
+    const like = this.likeRepo.create({ accountId, itemId: articleId });
     const removeResult = await this.likeRepo.delete(like);
     if (removeResult.affected === 1) {
       // this.cacheManager.HINCRBY(
@@ -59,7 +59,7 @@ export class LikeService {
       REDIS_KEY.ArticleLikeField,
     );
     if (count == null) {
-      count = await this.likeRepo.count({ articleId });
+      count = await this.likeRepo.count({ itemId: articleId });
       this.cacheManager.HSET(
         `${REDIS_KEY.ArticlePrefix}@${articleId}`,
         REDIS_KEY.ArticleLikeField,

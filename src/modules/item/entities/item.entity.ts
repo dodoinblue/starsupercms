@@ -9,10 +9,10 @@ import {
 } from 'class-validator';
 import { Column, Entity, ManyToOne, OneToMany } from 'typeorm';
 import { BaseEntity } from '../../../common/entity/base.entity';
-import { Like } from '../../../content/like/entities/like.entity';
+import { Like } from '../../like/entities/like.entity';
 import { ItemToTag } from '../../tag/entities/item-to-tag.entity';
 import { Category } from '../../category/entities/category.entity';
-import { Comment } from '../../../content/comment/entities/comment.entity';
+import { Comment } from '../../comment/entities/comment.entity';
 @Entity()
 export class Item extends BaseEntity {
   @IsString()
@@ -73,7 +73,7 @@ export class Item extends BaseEntity {
   @OneToMany(() => ItemToTag, (i2t) => i2t.item)
   itemToTags: ItemToTag[];
 
-  @OneToMany(() => Like, (like) => like.article)
+  @OneToMany(() => Like, (like) => like.item)
   likes: Like[];
 
   @OneToMany(() => Comment, (comment) => comment.article)
