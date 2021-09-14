@@ -14,6 +14,7 @@ import { HttpCacheInterceptor } from './interceptors/cache.interceptor';
 import { MediaModule } from './media/media.module';
 import { ItemModule } from './modules/item/item.module';
 import { TagModule } from './modules/tag/tag.module';
+import { CategoryModule } from './modules/category/category.module';
 
 @Module({
   imports: [
@@ -31,6 +32,7 @@ import { TagModule } from './modules/tag/tag.module';
     MediaModule,
     ItemModule,
     TagModule,
+    CategoryModule,
   ],
   controllers: [AppController],
   providers: [{ provide: APP_INTERCEPTOR, useClass: HttpCacheInterceptor }],

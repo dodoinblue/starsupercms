@@ -1,13 +1,13 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsOptional, IsString, Matches, MaxLength, MinLength } from 'class-validator';
-import { nanoid } from '../../utils/nanoid';
+import { nanoid } from '../../../utils/nanoid';
 import { Column, Entity, OneToMany, Tree, TreeChildren, TreeParent } from 'typeorm';
-import { BaseEntity } from '../../common/entity/base.entity';
-import { Item } from '../../modules/item/entities/item.entity';
+import { BaseEntity } from '../../../common/entity/base.entity';
+import { Item } from '../../item/entities/item.entity';
 
 @Entity()
 @Tree('materialized-path')
-export class ContentCategory extends BaseEntity {
+export class Category extends BaseEntity {
   @IsString()
   @MinLength(3)
   @ApiProperty({ description: 'Category name' })
@@ -29,10 +29,10 @@ export class ContentCategory extends BaseEntity {
   slug: string;
 
   @TreeChildren()
-  children: ContentCategory[];
+  children: Category[];
 
   @TreeParent({ onDelete: 'CASCADE' })
-  parent: ContentCategory;
+  parent: Category;
 
   @IsString()
   @IsOptional()

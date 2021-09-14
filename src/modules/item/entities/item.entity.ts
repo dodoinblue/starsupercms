@@ -11,7 +11,7 @@ import { Column, Entity, ManyToOne, OneToMany } from 'typeorm';
 import { BaseEntity } from '../../../common/entity/base.entity';
 import { Like } from '../../../content/like/entities/like.entity';
 import { ItemToTag } from '../../tag/entities/item-to-tag.entity';
-import { ContentCategory } from '../../../content/entities/category.entity';
+import { Category } from '../../category/entities/category.entity';
 import { Comment } from '../../../content/comment/entities/comment.entity';
 @Entity()
 export class Item extends BaseEntity {
@@ -63,8 +63,8 @@ export class Item extends BaseEntity {
   @Column({ default: 0 })
   state: number; // 0: draft, 100: under review, 200: published
 
-  @ManyToOne(() => ContentCategory, (category) => category.articles)
-  category: ContentCategory;
+  @ManyToOne(() => Category, (category) => category.articles)
+  category: Category;
 
   @Column({ nullable: true })
   @IsOptional()

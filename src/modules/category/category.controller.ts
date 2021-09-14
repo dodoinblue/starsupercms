@@ -1,10 +1,10 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete, Query, Req } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
-import { Pagination } from '../common/dto/query-options.dto';
-import { ContentCategoryPerms } from '../constants/permissions';
-import { HttpCache } from '../decorators/http-cache.decorator';
-import { Permission } from '../decorators/permission.decorator';
-import { attachUserIdToDto } from '../utils/attach-uid';
+import { Pagination } from '../../common/dto/query-options.dto';
+import { ContentCategoryPerms } from '../../constants/permissions';
+import { HttpCache } from '../../decorators/http-cache.decorator';
+import { Permission } from '../../decorators/permission.decorator';
+import { attachUserIdToDto } from '../../utils/attach-uid';
 import { CategoryService } from './category.service';
 import { CreateCategoryDto, UpdateCategoryDto } from './dto/category.dto';
 

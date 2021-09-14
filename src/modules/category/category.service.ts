@@ -1,17 +1,17 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { TreeRepository } from 'typeorm';
-import { Pagination } from '../common/dto/query-options.dto';
-import { ContentCategory } from './entities/category.entity';
+import { Pagination } from '../../common/dto/query-options.dto';
+import { Category } from './entities/category.entity';
 
 @Injectable()
 export class CategoryService {
   constructor(
-    @InjectRepository(ContentCategory)
-    private categoryRepo: TreeRepository<ContentCategory>,
+    @InjectRepository(Category)
+    private categoryRepo: TreeRepository<Category>,
   ) {}
 
-  async create(createCategoryDto: Partial<ContentCategory>) {
+  async create(createCategoryDto: Partial<Category>) {
     const category = await this.categoryRepo.create(createCategoryDto);
     if (createCategoryDto.parentId) {
       category.parent = this.categoryRepo.create({ id: createCategoryDto.parentId });
@@ -32,7 +32,7 @@ export class CategoryService {
     return await this.categoryRepo.findDescendantsTree(parent);
   }
 
-  async update(id: string, updateCategoryDto: Partial<ContentCategory>) {
+  async update(id: string, updateCategoryDto: Partial<Category>) {
     return await this.categoryRepo.update({ id }, updateCategoryDto);
   }
 
