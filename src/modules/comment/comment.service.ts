@@ -1,11 +1,10 @@
 import { HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import lodash from 'lodash';
 import { Repository, TreeRepository } from 'typeorm';
-import { CacheService } from '../../cache/redis-cache.service';
 import { REDIS_KEY } from '../../constants/prefixes';
 import { CustomError, ErrCodes } from '../../errors/errors';
 import { sortStringToFindOptions } from '../../utils/sort-options';
+import { CacheService } from '../cache/redis-cache.service';
 import { Item } from '../item/entities/item.entity';
 import { CommentFlatQuery, CreateCommentDto, UpdateCommentDto } from './dto/comment.dto';
 import { Comment } from './entities/comment.entity';

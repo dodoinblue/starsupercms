@@ -11,7 +11,7 @@ import {
   CACHE_KEY_METADATA,
   Inject,
 } from '@nestjs/common';
-import { CacheService } from '../cache/redis-cache.service';
+import { CacheService } from '../modules/cache/redis-cache.service';
 import { REDIS } from '../config/configurations';
 import { CACHE_KEY_BY_URL, MetadataKey } from '../constants/metadata';
 

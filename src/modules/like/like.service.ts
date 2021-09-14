@@ -3,9 +3,9 @@ import { InjectRepository } from '@nestjs/typeorm';
 import lodash from 'lodash';
 import { from, lastValueFrom, mergeMap, toArray } from 'rxjs';
 import { Repository } from 'typeorm';
-import { CacheService } from '../../cache/redis-cache.service';
 import { Pagination } from '../../common/dto/query-options.dto';
 import { REDIS_KEY } from '../../constants/prefixes';
+import { CacheService } from '../cache/redis-cache.service';
 import { Like } from './entities/like.entity';
 
 @Injectable()
