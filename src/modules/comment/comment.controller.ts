@@ -31,12 +31,9 @@ export class CommentController {
     return this.commentService.create(createCommentDto);
   }
 
-  @Get('articles/:articleId')
-  findByArticleId(
-    @Param('articleId') articleId: string,
-    @Query(SortToOrderPipe) options: BasicQuery,
-  ) {
-    return this.commentService.findByArticleId(articleId, options);
+  @Get('items/:itemId')
+  findByItemId(@Param('itemId') itemId: string, @Query(SortToOrderPipe) options: BasicQuery) {
+    return this.commentService.findByItemId(itemId, options);
   }
 
   @Get(':commentId')

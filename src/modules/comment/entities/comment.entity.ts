@@ -42,7 +42,7 @@ export class Comment extends BaseEntity {
   @Column('simple-json')
   extra?: any;
 
-  @ManyToOne(() => Item, (article) => article.comments)
+  @ManyToOne(() => Item, (item) => item.comments)
   item: Item;
 
   @IsString()

@@ -6,7 +6,7 @@ export class CreateCommentDto extends PickType(Comment, [
   'content',
   'parentId',
   'extra',
-  'articleId',
+  'itemId',
 ]) {}
 
 export class UpdateCommentDto extends PickType(CreateCommentDto, ['content', 'extra']) {}

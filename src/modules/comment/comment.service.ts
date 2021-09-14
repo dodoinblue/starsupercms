@@ -16,44 +16,44 @@ export class CommentService {
     @InjectRepository(Comment)
     private commentRepo: TreeRepository<Comment>,
     @InjectRepository(Item)
-    private articleRepo: Repository<Item>,
+    private itemRepo: Repository<Item>,
     private readonly cacheManager: CacheService,
   ) {}
 
   async create(createCommentDto: CreateCommentDto) {
     const comment = this.commentRepo.create(createCommentDto);
-    // TODO: insert articleId from parent comment
-    const articleId = createCommentDto.itemId;
-    comment.item = this.articleRepo.create({ id: articleId });
+    // TODO: insert itemId from parent comment
+    const itemId = createCommentDto.itemId;
+    comment.item = this.itemRepo.create({ id: itemId });
     const createResponse = await this.commentRepo.save(comment);
     return createResponse;
   }
 
-  async findByArticleId(articleId: string, options: BasicQuery) {
+  async findByItemId(itemId: string, options: BasicQuery) {
     sortStringToFindOptions(options);
     const findResult = await this.commentRepo.find({
       where: {
-        itemId: articleId,
+        itemId: itemId,
       },
       ...options,
     });
-    const total = this.countCommentByArticleId(articleId);
+    const total = this.countCommentByItemId(itemId);
     return {
       items: findResult,
       total,
     };
   }
 
-  async countCommentByArticleId(articleId: string) {
+  async countCommentByItemId(itemId: string) {
     let count = await this.cacheManager.HGET(
-      `${REDIS_KEY.ArticlePrefix}@${articleId}`,
-      REDIS_KEY.ArticleCommentField,
+      `${REDIS_KEY.ItemPrefix}@${itemId}`,
+      REDIS_KEY.ItemCommentField,
     );
     if (count == null) {
-      count = await this.commentRepo.count({ itemId: articleId });
+      count = await this.commentRepo.count({ itemId: itemId });
       await this.cacheManager.HSET(
-        `${REDIS_KEY.ArticlePrefix}@${articleId}`,
-        REDIS_KEY.ArticleCommentField,
+        `${REDIS_KEY.ItemPrefix}@${itemId}`,
+        REDIS_KEY.ItemCommentField,
         count,
       );
     }
@@ -77,12 +77,6 @@ export class CommentService {
     const comment = await this.commentRepo.findOne(commentId);
     if (comment.createdBy === editorId) {
       await this.commentRepo.softDelete({ id: commentId });
-      const articleId = comment.itemId;
-      // this.cacheManager.HINCRBY(
-      //   `${REDIS_KEY.ArticlePrefix}@${articleId}`,
-      //   REDIS_KEY.ArticleCommentField,
-      //   -1,
-      // );
     } else {
       throw new CustomError(
         ErrCodes.FORBIDDEN,

@@ -63,7 +63,7 @@ export class Item extends BaseEntity {
   @Column({ default: 0 })
   state: number; // 0: draft, 100: under review, 200: published
 
-  @ManyToOne(() => Category, (category) => category.articles)
+  @ManyToOne(() => Category, (category) => category.items)
   category: Category;
 
   @Column({ nullable: true })

@@ -9,19 +9,19 @@ import { Item } from './entities/item.entity';
 export class ItemService {
   constructor(
     @InjectRepository(Item)
-    private articleRepo: Repository<Item>,
+    private itemRepo: Repository<Item>,
 
     @InjectRepository(ItemToTag)
     private a2tRepo: Repository<ItemToTag>,
   ) {}
 
   create(dto: Partial<Item>) {
-    const article = this.articleRepo.create(dto);
-    return this.articleRepo.save(article);
+    const item = this.itemRepo.create(dto);
+    return this.itemRepo.save(item);
   }
 
   async findAll(options: QueryItemOptions) {
-    let queryCmd = this.articleRepo.createQueryBuilder('article');
+    let queryCmd = this.itemRepo.createQueryBuilder('item');
     if (options.categoryId) {
       queryCmd = queryCmd.where({ categoryId: options.categoryId });
     }
@@ -52,26 +52,26 @@ export class ItemService {
   }
 
   findOne(id: string) {
-    return this.articleRepo.findOne(id);
+    return this.itemRepo.findOne(id);
   }
 
   async update(id: string, dto: Partial<Item>) {
-    const article = this.articleRepo.create(dto);
-    return await this.articleRepo.update(id, article);
+    const item = this.itemRepo.create(dto);
+    return await this.itemRepo.update(id, item);
   }
 
   remove(id: string) {
-    return this.articleRepo.delete(id);
+    return this.itemRepo.delete(id);
   }
 
-  async applyTags(articleId: string, tagIds: string[], userId: string) {
-    const articleToTags = tagIds.map((tagId) =>
-      this.a2tRepo.create({ tagId, itemId: articleId, createdBy: userId, updatedBy: userId }),
+  async applyTags(itemId: string, tagIds: string[], userId: string) {
+    const itemToTags = tagIds.map((tagId) =>
+      this.a2tRepo.create({ tagId, itemId: itemId, createdBy: userId, updatedBy: userId }),
     );
-    return await this.a2tRepo.save(articleToTags);
+    return await this.a2tRepo.save(itemToTags);
   }
 
-  async removeTags(articleId: string, tagIds: string[]) {
-    return await this.a2tRepo.delete({ itemId: articleId, tagId: In(tagIds) });
+  async removeTags(itemId: string, tagIds: string[]) {
+    return await this.a2tRepo.delete({ itemId: itemId, tagId: In(tagIds) });
   }
 }

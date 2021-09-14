@@ -10,37 +10,37 @@ import { SortToOrderPipe } from '../../pipes/sort-option.pipe';
 export class LikeController {
   constructor(private readonly likeService: LikeService) {}
 
-  @Put('users/:userId/articles/:articleId')
-  @ApiOperation({ description: 'Like an article' })
+  @Put('users/:userId/items/:items')
+  @ApiOperation({ description: 'Like an item' })
   @Self()
-  async likeArticle(@Param('userId') userId: string, @Param('articleId') articleId: string) {
-    return await this.likeService.likeArticle(userId, articleId);
+  async likeItem(@Param('userId') userId: string, @Param('items') items: string) {
+    return await this.likeService.likeItem(userId, items);
   }
 
-  @Delete('users/:userId/articles/:articleId')
-  @ApiOperation({ description: 'Unlike an article' })
+  @Delete('users/:userId/items/:items')
+  @ApiOperation({ description: 'Unlike an item' })
   @Self()
-  async deleteLikeArticle(@Param('userId') userId: string, @Param('articleId') articleId: string) {
-    return await this.likeService.unlikeArticle(userId, articleId);
+  async deleteLikeItem(@Param('userId') userId: string, @Param('items') items: string) {
+    return await this.likeService.unlikeItem(userId, items);
   }
 
   @Get('users/:userId')
-  @ApiOperation({ description: 'Get the list of liked articles of a user.' })
+  @ApiOperation({ description: 'Get the list of liked items of a user.' })
   @Self()
   getUserLikes(@Param('userId') userId: string, @Query(SortToOrderPipe) options: BasicQuery) {
-    return this.likeService.findLikedArticles(userId, options);
+    return this.likeService.findLikedItems(userId, options);
   }
 
-  @Get('articles/:articleId')
-  @ApiOperation({ description: 'Count likes of an article' })
-  countArticleLikes(@Param('articleId') articleId: string) {
-    return this.likeService.countArticleLikes(articleId);
+  @Get('items/:itemId')
+  @ApiOperation({ description: 'Count likes of an item' })
+  countItemLikes(@Param('itemId') itemId: string) {
+    return this.likeService.countItemLikes(itemId);
   }
 
-  @Get('articles')
-  @ApiOperation({ description: 'Count likes of articles in batch' })
-  batchCountArticleLikes(@Query('commaSeparatedIds') articleIdsString: string) {
-    const articleIds = articleIdsString.split(',');
-    return this.likeService.batchCountArticleLikes(articleIds);
+  @Get('items')
+  @ApiOperation({ description: 'Count likes of items in batch' })
+  batchCountItemLikes(@Query('commaSeparatedIds') itemIdsString: string) {
+    const itemIds = itemIdsString.split(',');
+    return this.likeService.batchCountItemLikes(itemIds);
   }
 }

@@ -40,8 +40,8 @@ export class Category extends BaseEntity {
   @Column({ nullable: true })
   parentId?: string;
 
-  @OneToMany(() => Item, (article) => article.category)
-  articles: Item[];
+  @OneToMany(() => Item, (item) => item.category)
+  items: Item[];
 
   generateId() {
     console.log('child before insert');

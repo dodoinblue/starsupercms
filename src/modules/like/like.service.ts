@@ -16,30 +16,25 @@ export class LikeService {
     private readonly cacheManager: CacheService,
   ) {}
 
-  async likeArticle(accountId: string, articleId: string) {
-    const like = this.likeRepo.create({ accountId, itemId: articleId });
+  async likeItem(accountId: string, itemId: string) {
+    const like = this.likeRepo.create({ accountId, itemId: itemId });
     const likeResponse = await this.likeRepo.insert(like);
-    // this.cacheManager.HINCRBY(
-    //   `${REDIS_KEY.ArticlePrefix}@${articleId}`,
-    //   REDIS_KEY.ArticleLikeField,
-    //   1,
-    // );
     return likeResponse;
   }
 
-  async unlikeArticle(accountId: string, articleId: string) {
-    const like = this.likeRepo.create({ accountId, itemId: articleId });
+  async unlikeItem(accountId: string, itemId: string) {
+    const like = this.likeRepo.create({ accountId, itemId: itemId });
     const removeResult = await this.likeRepo.delete(like);
     if (removeResult.affected === 1) {
       // this.cacheManager.HINCRBY(
-      //   `${REDIS_KEY.ArticlePrefix}@${articleId}`,
+      //   `${REDIS_KEY.ArticlePrefix}@${itemId}`,
       //   REDIS_KEY.ArticleLikeField,
       //   -1,
       // );
     }
   }
 
-  async findLikedArticles(accountId: string, options: BasicQuery) {
+  async findLikedItems(accountId: string, options: BasicQuery) {
     const [items, total] = await this.likeRepo.findAndCount({
       where: {
         accountId,
@@ -53,31 +48,27 @@ export class LikeService {
     return { items, total };
   }
 
-  async countArticleLikes(articleId: string) {
+  async countItemLikes(itemId: string) {
     let count = await this.cacheManager.HGET(
-      `${REDIS_KEY.ArticlePrefix}@${articleId}`,
-      REDIS_KEY.ArticleLikeField,
+      `${REDIS_KEY.ItemPrefix}@${itemId}`,
+      REDIS_KEY.ItemLikeField,
     );
     if (count == null) {
-      count = await this.likeRepo.count({ itemId: articleId });
-      this.cacheManager.HSET(
-        `${REDIS_KEY.ArticlePrefix}@${articleId}`,
-        REDIS_KEY.ArticleLikeField,
-        count,
-      );
+      count = await this.likeRepo.count({ itemId: itemId });
+      this.cacheManager.HSET(`${REDIS_KEY.ItemPrefix}@${itemId}`, REDIS_KEY.ItemLikeField, count);
     }
     return parseInt(count, 10);
   }
 
-  async batchCountArticleLikes(articleIds: string[]) {
+  async batchCountItemLikes(itemIds: string[]) {
     const counts = await lastValueFrom(
-      from(articleIds).pipe(
-        mergeMap((articleId) => {
-          return this.countArticleLikes(articleId);
+      from(itemIds).pipe(
+        mergeMap((itemId) => {
+          return this.countItemLikes(itemId);
         }, 4), // concurrency
         toArray(),
       ),
     );
-    return lodash.zipObject(articleIds, counts);
+    return lodash.zipObject(itemIds, counts);
   }
 }
