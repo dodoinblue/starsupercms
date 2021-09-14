@@ -10,7 +10,7 @@ import {
 } from 'class-validator';
 import { Column, Entity, ManyToOne, Tree } from 'typeorm';
 import { BaseEntity } from '../../../common/entity/base.entity';
-import { Article } from '../../../modules/item/entities/item.entity';
+import { Item } from '../../../modules/item/entities/item.entity';
 
 @Entity()
 @Tree('materialized-path')
@@ -42,8 +42,8 @@ export class Comment extends BaseEntity {
   @Column('simple-json')
   extra?: any;
 
-  @ManyToOne(() => Article, (article) => article.comments)
-  article: Article;
+  @ManyToOne(() => Item, (article) => article.comments)
+  article: Item;
 
   @IsString()
   @Column()

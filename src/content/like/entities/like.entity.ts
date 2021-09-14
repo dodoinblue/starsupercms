@@ -10,7 +10,7 @@ import {
 } from 'typeorm';
 import { Account } from '../../../auth/entity/account.entity';
 import { nanoid } from '../../../utils/nanoid';
-import { Article } from '../../../modules/item/entities/item.entity';
+import { Item } from '../../../modules/item/entities/item.entity';
 
 @Entity()
 @Unique(['articleId', 'accountId'])
@@ -22,8 +22,8 @@ export class Like {
   @Column()
   articleId: string;
 
-  @ManyToOne(() => Article, (article) => article.likes)
-  article: Article;
+  @ManyToOne(() => Item, (article) => article.likes)
+  article: Item;
 
   @IsString()
   @Column()

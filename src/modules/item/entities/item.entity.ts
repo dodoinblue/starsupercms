@@ -10,11 +10,11 @@ import {
 import { Column, Entity, ManyToOne, OneToMany } from 'typeorm';
 import { BaseEntity } from '../../../common/entity/base.entity';
 import { Like } from '../../../content/like/entities/like.entity';
-import { ArticleToTag } from '../../../content/entities/article-tag.entity';
+import { ItemToTag } from '../../tag/entities/item-to-tag.entity';
 import { ContentCategory } from '../../../content/entities/category.entity';
 import { Comment } from '../../../content/comment/entities/comment.entity';
 @Entity()
-export class Article extends BaseEntity {
+export class Item extends BaseEntity {
   @IsString()
   @Column({ nullable: false, default: 'post' })
   type: string;
@@ -70,8 +70,8 @@ export class Article extends BaseEntity {
   @IsOptional()
   categoryId?: string;
 
-  @OneToMany(() => ArticleToTag, (a2t) => a2t.article)
-  articleToTags: ArticleToTag[];
+  @OneToMany(() => ItemToTag, (i2t) => i2t.item)
+  itemToTags: ItemToTag[];
 
   @OneToMany(() => Like, (like) => like.article)
   likes: Like[];

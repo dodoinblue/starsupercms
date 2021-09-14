@@ -3,7 +3,7 @@ import { IsOptional, IsString, Matches, MaxLength, MinLength } from 'class-valid
 import { nanoid } from '../../utils/nanoid';
 import { Column, Entity, OneToMany, Tree, TreeChildren, TreeParent } from 'typeorm';
 import { BaseEntity } from '../../common/entity/base.entity';
-import { Article } from '../../modules/item/entities/item.entity';
+import { Item } from '../../modules/item/entities/item.entity';
 
 @Entity()
 @Tree('materialized-path')
@@ -40,8 +40,8 @@ export class ContentCategory extends BaseEntity {
   @Column({ nullable: true })
   parentId?: string;
 
-  @OneToMany(() => Article, (article) => article.category)
-  articles: Article[];
+  @OneToMany(() => Item, (article) => article.category)
+  articles: Item[];
 
   generateId() {
     console.log('child before insert');

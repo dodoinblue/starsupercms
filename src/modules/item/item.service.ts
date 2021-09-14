@@ -1,26 +1,26 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Brackets, In, Like, Repository } from 'typeorm';
-import { ArticleToTag } from '../../content/entities/article-tag.entity';
-import { QueryArticleOptions } from './dto/item.dto';
-import { Article } from './entities/item.entity';
+import { ItemToTag } from '../tag/entities/item-to-tag.entity';
+import { QueryItemOptions } from './dto/item.dto';
+import { Item } from './entities/item.entity';
 
 @Injectable()
-export class ArticleService {
+export class ItemService {
   constructor(
-    @InjectRepository(Article)
-    private articleRepo: Repository<Article>,
+    @InjectRepository(Item)
+    private articleRepo: Repository<Item>,
 
-    @InjectRepository(ArticleToTag)
-    private a2tRepo: Repository<ArticleToTag>,
+    @InjectRepository(ItemToTag)
+    private a2tRepo: Repository<ItemToTag>,
   ) {}
 
-  create(dto: Partial<Article>) {
+  create(dto: Partial<Item>) {
     const article = this.articleRepo.create(dto);
     return this.articleRepo.save(article);
   }
 
-  async findAll(options: QueryArticleOptions) {
+  async findAll(options: QueryItemOptions) {
     let queryCmd = this.articleRepo.createQueryBuilder('article');
     if (options.categoryId) {
       queryCmd = queryCmd.where({ categoryId: options.categoryId });
@@ -55,7 +55,7 @@ export class ArticleService {
     return this.articleRepo.findOne(id);
   }
 
-  async update(id: string, dto: Partial<Article>) {
+  async update(id: string, dto: Partial<Item>) {
     const article = this.articleRepo.create(dto);
     return await this.articleRepo.update(id, article);
   }
@@ -66,12 +66,12 @@ export class ArticleService {
 
   async applyTags(articleId: string, tagIds: string[], userId: string) {
     const articleToTags = tagIds.map((tagId) =>
-      this.a2tRepo.create({ tagId, articleId, createdBy: userId, updatedBy: userId }),
+      this.a2tRepo.create({ tagId, itemId: articleId, createdBy: userId, updatedBy: userId }),
     );
     return await this.a2tRepo.save(articleToTags);
   }
 
   async removeTags(articleId: string, tagIds: string[]) {
-    return await this.a2tRepo.delete({ articleId, tagId: In(tagIds) });
+    return await this.a2tRepo.delete({ itemId: articleId, tagId: In(tagIds) });
   }
 }

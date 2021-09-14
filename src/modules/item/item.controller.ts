@@ -3,24 +3,24 @@ import { ApiTags } from '@nestjs/swagger';
 import { ArticlePerms } from '../../constants/permissions';
 import { Permission } from '../../decorators/permission.decorator';
 import { attachUserIdToDto } from '../../utils/attach-uid';
-import { ArticleService } from './item.service';
-import { CreateArticleDto, QueryArticleOptions, UpdateArticleDto } from './dto/item.dto';
-import { ApplyTagsDto, RemoveTagsQuery } from '../../content/dto/tag.dto';
+import { ItemService } from './item.service';
+import { CreateItemDto, QueryItemOptions, UpdateItemDto } from './dto/item.dto';
+import { ApplyTagsDto, RemoveTagsQuery } from '../tag/dto/tag.dto';
 
 @Controller('article')
 @ApiTags('Article')
 export class ArticleController {
-  constructor(private readonly articleService: ArticleService) {}
+  constructor(private readonly articleService: ItemService) {}
 
   @Post()
   @Permission([ArticlePerms.CREATE])
-  create(@Body() dto: CreateArticleDto, @Req() request) {
+  create(@Body() dto: CreateItemDto, @Req() request) {
     attachUserIdToDto(request, dto);
     return this.articleService.create(dto);
   }
 
   @Get()
-  findAll(@Query() options: QueryArticleOptions) {
+  findAll(@Query() options: QueryItemOptions) {
     return this.articleService.findAll(options);
   }
 
@@ -31,7 +31,7 @@ export class ArticleController {
 
   @Patch(':id')
   @Permission([ArticlePerms.EDIT])
-  update(@Param('id') id: string, @Body() dto: UpdateArticleDto, @Req() request) {
+  update(@Param('id') id: string, @Body() dto: UpdateItemDto, @Req() request) {
     attachUserIdToDto(request, dto, ['updatedBy']);
     return this.articleService.update(id, dto);
   }

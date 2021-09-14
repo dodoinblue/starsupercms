@@ -1,11 +1,11 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete, Query, Req } from '@nestjs/common';
 import { TagService } from './tag.service';
-import { CreateTagDto, UpdateTagDto } from './dto/tag.dto';
-import { Pagination } from '../common/dto/query-options.dto';
-import { attachUserIdToDto } from '../utils/attach-uid';
-import { TagPerms } from '../constants/permissions';
-import { Permission } from '../decorators/permission.decorator';
 import { ApiTags } from '@nestjs/swagger';
+import { Pagination } from '../../common/dto/query-options.dto';
+import { TagPerms } from '../../constants/permissions';
+import { Permission } from '../../decorators/permission.decorator';
+import { attachUserIdToDto } from '../../utils/attach-uid';
+import { CreateTagDto, UpdateTagDto } from './dto/tag.dto';
 
 @Controller('tag')
 @ApiTags('Tag')

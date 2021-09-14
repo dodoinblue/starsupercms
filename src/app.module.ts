@@ -13,6 +13,7 @@ import { APP_INTERCEPTOR } from '@nestjs/core';
 import { HttpCacheInterceptor } from './interceptors/cache.interceptor';
 import { MediaModule } from './media/media.module';
 import { ItemModule } from './modules/item/item.module';
+import { TagModule } from './modules/tag/tag.module';
 
 @Module({
   imports: [
@@ -29,6 +30,7 @@ import { ItemModule } from './modules/item/item.module';
     ContentModule,
     MediaModule,
     ItemModule,
+    TagModule,
   ],
   controllers: [AppController],
   providers: [{ provide: APP_INTERCEPTOR, useClass: HttpCacheInterceptor }],
