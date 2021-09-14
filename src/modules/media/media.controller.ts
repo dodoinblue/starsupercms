@@ -1,8 +1,9 @@
-import { Body, Controller, Post, UploadedFile } from '@nestjs/common';
+import { Body, Controller, Get, Post, Query, Req, UploadedFile } from '@nestjs/common';
 import { CreateMediaDto } from './dto/media.dto';
 import { MediaService } from './media.service';
 import { SaveUploadToLocal } from '../../decorators/local-file-upload.decorator';
 import { ApiTags } from '@nestjs/swagger';
+import { BasicQuery } from '../../common/dto/query-options.dto';
 
 @Controller('media')
 @ApiTags('Media')
@@ -13,5 +14,10 @@ export class MediaController {
   @SaveUploadToLocal('file')
   create(@Body() createMediaDto: CreateMediaDto, @UploadedFile('file') file: Express.Multer.File) {
     return this.mediaService.create({ ...createMediaDto, file });
+  }
+
+  @Get()
+  findAll(@Query() options: BasicQuery) {
+    return this.mediaService.findAll(options);
   }
 }

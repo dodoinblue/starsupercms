@@ -35,3 +35,10 @@ export enum AnnouncePerms {
   EDIT = 'edit_announce',
   DELETE = 'delete_announce',
 }
+
+export enum CarouselPerms {
+  CREATE = 'create_carousel',
+  LIST = 'list_carousel',
+  EDIT = 'edit_carousel',
+  DELETE = 'delete_carousel',
+}

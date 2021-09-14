@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import { BasicQuery } from '../../common/dto/query-options.dto';
 import { CreateMediaDto } from './dto/media.dto';
 import { Media } from './entities/media.entity';
 
@@ -17,5 +18,10 @@ export class MediaService {
       type: createMediaDto.file.mimetype,
     });
     return this.mediaRepo.save(media);
+  }
+
+  async findAll(options: BasicQuery) {
+    const [items, total] = await this.mediaRepo.findAndCount(options);
+    return { items, total };
   }
 }
