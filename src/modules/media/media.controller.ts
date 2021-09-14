@@ -1,7 +1,7 @@
 import { Body, Controller, Post, UploadedFile } from '@nestjs/common';
 import { CreateMediaDto } from './dto/media.dto';
 import { MediaService } from './media.service';
-import { SaveUploadToLocal } from '../decorators/local-file-upload.decorator';
+import { SaveUploadToLocal } from '../../decorators/local-file-upload.decorator';
 import { ApiTags } from '@nestjs/swagger';
 
 @Controller('media')

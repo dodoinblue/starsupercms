@@ -1,6 +1,6 @@
 import { IsString } from 'class-validator';
 import { Column, Entity, OneToMany } from 'typeorm';
-import { BaseEntity } from '../../common/entity/base.entity';
+import { BaseEntity } from '../../../common/entity/base.entity';
 import { RoleToAccount } from './role-account.entity';
 
 @Entity()

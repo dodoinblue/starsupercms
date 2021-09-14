@@ -1,9 +1,9 @@
 import { Body, Controller, HttpCode, Post, Req, UseGuards } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import lodash from 'lodash';
-import { APP_INFO, AUTH } from '../config/configurations';
-import { JwtGuard } from '../guards/jwt.guard';
-import { EmailService } from '../helper/email.service';
+import { APP_INFO, AUTH } from '../../config/configurations';
+import { JwtGuard } from '../../guards/jwt.guard';
+import { EmailService } from '../../helper/email.service';
 import { AccountTokenPurpose, AccountType } from './auth.interface';
 import { AuthService } from './auth.service';
 import { Email, EmailAuth, EmailResetPassword, EmailVerify } from './dto/account.dto';

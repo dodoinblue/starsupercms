@@ -1,11 +1,11 @@
 import { Body, Controller, Delete, Get, HttpStatus, Param, Patch, Put, Req } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
-import { Self } from '../decorators/self.decorator';
+import { Self } from '../../decorators/self.decorator';
 import { ProfileDto } from './dto/profile.dto';
 import { ProfilesService } from './profiles.service';
 import lodash from 'lodash';
-import { CustomError, ErrCodes } from '../errors/errors';
-import { attachUserIdToDto } from '../utils/attach-uid';
+import { CustomError, ErrCodes } from '../../errors/errors';
+import { attachUserIdToDto } from '../../utils/attach-uid';
 
 @Controller('profile')
 @ApiTags('Profile')

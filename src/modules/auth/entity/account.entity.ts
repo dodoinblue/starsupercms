@@ -1,8 +1,8 @@
 import { ApiHideProperty } from '@nestjs/swagger';
 import { IsBoolean, IsInt, IsString } from 'class-validator';
 import { Column, Entity, OneToMany } from 'typeorm';
-import { BaseEntity } from '../../common/entity/base.entity';
-import { Like } from '../../modules/like/entities/like.entity';
+import { BaseEntity } from '../../../common/entity/base.entity';
+import { Like } from '../../like/entities/like.entity';
 import { RoleToAccount } from './role-account.entity';
 
 @Entity()

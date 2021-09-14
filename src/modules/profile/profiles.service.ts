@@ -3,7 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { omit } from 'lodash';
 import { DeepPartial, Repository } from 'typeorm';
 import { Account } from '../auth/entity/account.entity';
-import { CustomError, ErrCodes } from '../errors/errors';
+import { CustomError, ErrCodes } from '../../errors/errors';
 import { Profile } from './entity/profile.entity';
 
 @Injectable()

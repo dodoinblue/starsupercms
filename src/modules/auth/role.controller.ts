@@ -13,9 +13,9 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { Pagination } from '../common/dto/query-options.dto';
-import { JwtGuard } from '../guards/jwt.guard';
-import { attachUserIdToDto } from '../utils/attach-uid';
+import { Pagination } from '../../common/dto/query-options.dto';
+import { JwtGuard } from '../../guards/jwt.guard';
+import { attachUserIdToDto } from '../../utils/attach-uid';
 import { AssignRoleMembers, CreateRoleDto, DeleteRoleMembers, UpdateRoleDto } from './dto/role.dto';
 import { RoleService } from './role.service';
 

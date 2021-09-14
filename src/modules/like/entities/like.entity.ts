@@ -1,6 +1,6 @@
 import { IsString } from 'class-validator';
 import { Column, Entity, ManyToOne, Unique } from 'typeorm';
-import { Account } from '../../../auth/entity/account.entity';
+import { Account } from '../../auth/entity/account.entity';
 import { BaseEntity } from '../../../common/entity/base.entity';
 import { Item } from '../../item/entities/item.entity';
 

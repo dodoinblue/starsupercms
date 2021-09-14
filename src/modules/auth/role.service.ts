@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { In, Repository } from 'typeorm';
-import { Pagination } from '../common/dto/query-options.dto';
+import { Pagination } from '../../common/dto/query-options.dto';
 import { RoleToAccount } from './entity/role-account.entity';
 import { Role } from './entity/role.entity';
 

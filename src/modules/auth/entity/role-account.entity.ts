@@ -1,5 +1,5 @@
 import { Column, Entity, ManyToOne, RelationId } from 'typeorm';
-import { BaseEntity } from '../../common/entity/base.entity';
+import { BaseEntity } from '../../../common/entity/base.entity';
 import { Account } from './account.entity';
 import { Role } from './role.entity';
 
