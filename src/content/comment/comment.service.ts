@@ -6,7 +6,7 @@ import { CacheService } from '../../cache/redis-cache.service';
 import { REDIS_KEY } from '../../constants/prefixes';
 import { CustomError, ErrCodes } from '../../errors/errors';
 import { sortStringToFindOptions } from '../../utils/sort-options';
-import { Article } from '../entities/article.entity';
+import { Article } from '../../modules/item/entities/item.entity';
 import { CommentFlatQuery, CreateCommentDto, UpdateCommentDto } from './dto/comment.dto';
 import { Comment } from './entities/comment.entity';
 

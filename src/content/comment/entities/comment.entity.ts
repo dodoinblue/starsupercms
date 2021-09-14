@@ -10,7 +10,7 @@ import {
 } from 'class-validator';
 import { Column, Entity, ManyToOne, Tree } from 'typeorm';
 import { BaseEntity } from '../../../common/entity/base.entity';
-import { Article } from '../../entities/article.entity';
+import { Article } from '../../../modules/item/entities/item.entity';
 
 @Entity()
 @Tree('materialized-path')

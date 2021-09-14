@@ -1,9 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Brackets, In, Like, Repository } from 'typeorm';
-import { QueryArticleOptions } from './dto/article.dto';
-import { ArticleToTag } from './entities/article-tag.entity';
-import { Article } from './entities/article.entity';
+import { ArticleToTag } from '../../content/entities/article-tag.entity';
+import { QueryArticleOptions } from './dto/item.dto';
+import { Article } from './entities/item.entity';
 
 @Injectable()
 export class ArticleService {

@@ -1,11 +1,11 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete, Req, Query } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
-import { ArticlePerms } from '../constants/permissions';
-import { Permission } from '../decorators/permission.decorator';
-import { attachUserIdToDto } from '../utils/attach-uid';
-import { ArticleService } from './article.service';
-import { CreateArticleDto, QueryArticleOptions, UpdateArticleDto } from './dto/article.dto';
-import { ApplyTagsDto, RemoveTagsQuery } from './dto/tag.dto';
+import { ArticlePerms } from '../../constants/permissions';
+import { Permission } from '../../decorators/permission.decorator';
+import { attachUserIdToDto } from '../../utils/attach-uid';
+import { ArticleService } from './item.service';
+import { CreateArticleDto, QueryArticleOptions, UpdateArticleDto } from './dto/item.dto';
+import { ApplyTagsDto, RemoveTagsQuery } from '../../content/dto/tag.dto';
 
 @Controller('article')
 @ApiTags('Article')

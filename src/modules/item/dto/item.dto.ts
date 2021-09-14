@@ -1,7 +1,7 @@
 import { ApiPropertyOptional, PartialType, PickType } from '@nestjs/swagger';
 import { IsOptional, IsString, MinLength } from 'class-validator';
-import { Pagination } from '../../common/dto/query-options.dto';
-import { Article } from '../entities/article.entity';
+import { Pagination } from '../../../common/dto/query-options.dto';
+import { Article } from '../entities/item.entity';
 
 export class CreateArticleDto extends PickType(Article, [
   'title',

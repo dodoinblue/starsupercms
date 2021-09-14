@@ -3,7 +3,7 @@ import { IsOptional, IsString, Matches, MaxLength, MinLength } from 'class-valid
 import { nanoid } from '../../utils/nanoid';
 import { Column, Entity, OneToMany, Tree, TreeChildren, TreeParent } from 'typeorm';
 import { BaseEntity } from '../../common/entity/base.entity';
-import { Article } from './article.entity';
+import { Article } from '../../modules/item/entities/item.entity';
 
 @Entity()
 @Tree('materialized-path')

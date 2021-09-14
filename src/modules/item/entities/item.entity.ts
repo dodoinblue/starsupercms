@@ -8,13 +8,17 @@ import {
   MinLength,
 } from 'class-validator';
 import { Column, Entity, ManyToOne, OneToMany } from 'typeorm';
-import { BaseEntity } from '../../common/entity/base.entity';
-import { Like } from '../like/entities/like.entity';
-import { ArticleToTag } from './article-tag.entity';
-import { ContentCategory } from './category.entity';
-import { Comment } from '../comment/entities/comment.entity';
+import { BaseEntity } from '../../../common/entity/base.entity';
+import { Like } from '../../../content/like/entities/like.entity';
+import { ArticleToTag } from '../../../content/entities/article-tag.entity';
+import { ContentCategory } from '../../../content/entities/category.entity';
+import { Comment } from '../../../content/comment/entities/comment.entity';
 @Entity()
 export class Article extends BaseEntity {
+  @IsString()
+  @Column({ nullable: false, default: 'post' })
+  type: string;
+
   @IsString()
   @MinLength(3)
   @Column()

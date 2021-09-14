@@ -1,7 +1,7 @@
 import { IsString } from 'class-validator';
 import { Column, Entity, ManyToOne } from 'typeorm';
 import { BaseEntity } from '../../common/entity/base.entity';
-import { Article } from './article.entity';
+import { Article } from '../../modules/item/entities/item.entity';
 import { Tag } from './tag.entity';
 
 @Entity()

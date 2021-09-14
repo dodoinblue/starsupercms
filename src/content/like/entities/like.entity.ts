@@ -10,7 +10,7 @@ import {
 } from 'typeorm';
 import { Account } from '../../../auth/entity/account.entity';
 import { nanoid } from '../../../utils/nanoid';
-import { Article } from '../../entities/article.entity';
+import { Article } from '../../../modules/item/entities/item.entity';
 
 @Entity()
 @Unique(['articleId', 'accountId'])
