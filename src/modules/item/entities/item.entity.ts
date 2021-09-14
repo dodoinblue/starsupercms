@@ -76,6 +76,6 @@ export class Item extends BaseEntity {
   @OneToMany(() => Like, (like) => like.item)
   likes: Like[];
 
-  @OneToMany(() => Comment, (comment) => comment.article)
+  @OneToMany(() => Comment, (comment) => comment.item)
   comments: Comment[];
 }

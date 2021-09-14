@@ -3,7 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import lodash from 'lodash';
 import { from, lastValueFrom, mergeMap, toArray } from 'rxjs';
 import { Repository } from 'typeorm';
-import { Pagination } from '../../common/dto/query-options.dto';
+import { BasicQuery } from '../../common/dto/query-options.dto';
 import { REDIS_KEY } from '../../constants/prefixes';
 import { CacheService } from '../cache/redis-cache.service';
 import { Like } from './entities/like.entity';
@@ -39,7 +39,7 @@ export class LikeService {
     }
   }
 
-  async findLikedArticles(accountId: string, options: Pagination) {
+  async findLikedArticles(accountId: string, options: BasicQuery) {
     const [items, total] = await this.likeRepo.findAndCount({
       where: {
         accountId,

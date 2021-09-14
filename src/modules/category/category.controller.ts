@@ -1,9 +1,10 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete, Query, Req } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
-import { Pagination } from '../../common/dto/query-options.dto';
+import { BasicQuery } from '../../common/dto/query-options.dto';
 import { ContentCategoryPerms } from '../../constants/permissions';
 import { HttpCache } from '../../decorators/http-cache.decorator';
 import { Permission } from '../../decorators/permission.decorator';
+import { SortToOrderPipe } from '../../pipes/sort-option.pipe';
 import { attachUserIdToDto } from '../../utils/attach-uid';
 import { CategoryService } from './category.service';
 import { CreateCategoryDto, UpdateCategoryDto } from './dto/category.dto';
@@ -22,7 +23,7 @@ export class CategoryController {
 
   @Get()
   @HttpCache({ ttl: 300 })
-  findAll(@Query() options: Pagination) {
+  findAll(@Query(SortToOrderPipe) options: BasicQuery) {
     return this.categoryService.findAll(options);
   }
 

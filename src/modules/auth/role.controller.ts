@@ -13,8 +13,9 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { Pagination } from '../../common/dto/query-options.dto';
+import { BasicQuery } from '../../common/dto/query-options.dto';
 import { JwtGuard } from '../../guards/jwt.guard';
+import { SortToOrderPipe } from '../../pipes/sort-option.pipe';
 import { attachUserIdToDto } from '../../utils/attach-uid';
 import { AssignRoleMembers, CreateRoleDto, DeleteRoleMembers, UpdateRoleDto } from './dto/role.dto';
 import { RoleService } from './role.service';
@@ -28,7 +29,7 @@ export class RolesController {
 
   @Get()
   @HttpCode(HttpStatus.OK)
-  async list(@Query() options: Pagination) {
+  async list(@Query(SortToOrderPipe) options: BasicQuery) {
     return await this.roleService.findAll(options);
   }
 
@@ -59,7 +60,7 @@ export class RolesController {
   }
 
   @Get(':roleId/members')
-  async getMembers(@Param('roleId') roleId: string, @Query() options: Pagination) {
+  async getMembers(@Param('roleId') roleId: string, @Query(SortToOrderPipe) options: BasicQuery) {
     return await this.roleService.findMembers(roleId, options);
   }
 

@@ -1,6 +1,5 @@
 import { PickType } from '@nestjs/swagger';
 import { IsString, MinLength, IsOptional } from 'class-validator';
-import { Pagination } from '../../../common/dto/query-options.dto';
 import { Comment } from '../entities/comment.entity';
 
 export class CreateCommentDto extends PickType(Comment, [
@@ -11,13 +10,6 @@ export class CreateCommentDto extends PickType(Comment, [
 ]) {}
 
 export class UpdateCommentDto extends PickType(CreateCommentDto, ['content', 'extra']) {}
-
-export class CommentFlatQuery extends Pagination {
-  @IsString()
-  @MinLength(3)
-  @IsOptional()
-  sort?: string;
-}
 
 export class CommentTreeQuery {
   @IsString()

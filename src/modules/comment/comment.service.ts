@@ -1,12 +1,13 @@
 import { HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, TreeRepository } from 'typeorm';
+import { BasicQuery } from '../../common/dto/query-options.dto';
 import { REDIS_KEY } from '../../constants/prefixes';
 import { CustomError, ErrCodes } from '../../errors/errors';
 import { sortStringToFindOptions } from '../../utils/sort-options';
 import { CacheService } from '../cache/redis-cache.service';
 import { Item } from '../item/entities/item.entity';
-import { CommentFlatQuery, CreateCommentDto, UpdateCommentDto } from './dto/comment.dto';
+import { CreateCommentDto, UpdateCommentDto } from './dto/comment.dto';
 import { Comment } from './entities/comment.entity';
 
 @Injectable()
@@ -22,16 +23,18 @@ export class CommentService {
   async create(createCommentDto: CreateCommentDto) {
     const comment = this.commentRepo.create(createCommentDto);
     // TODO: insert articleId from parent comment
-    const articleId = createCommentDto.articleId;
-    comment.article = this.articleRepo.create({ id: articleId });
+    const articleId = createCommentDto.itemId;
+    comment.item = this.articleRepo.create({ id: articleId });
     const createResponse = await this.commentRepo.save(comment);
     return createResponse;
   }
 
-  async findByArticleId(articleId: string, options: CommentFlatQuery) {
+  async findByArticleId(articleId: string, options: BasicQuery) {
     sortStringToFindOptions(options);
     const findResult = await this.commentRepo.find({
-      articleId,
+      where: {
+        itemId: articleId,
+      },
       ...options,
     });
     const total = this.countCommentByArticleId(articleId);
@@ -47,7 +50,7 @@ export class CommentService {
       REDIS_KEY.ArticleCommentField,
     );
     if (count == null) {
-      count = await this.commentRepo.count({ articleId });
+      count = await this.commentRepo.count({ itemId: articleId });
       await this.cacheManager.HSET(
         `${REDIS_KEY.ArticlePrefix}@${articleId}`,
         REDIS_KEY.ArticleCommentField,
@@ -74,7 +77,7 @@ export class CommentService {
     const comment = await this.commentRepo.findOne(commentId);
     if (comment.createdBy === editorId) {
       await this.commentRepo.softDelete({ id: commentId });
-      const articleId = comment.articleId;
+      const articleId = comment.itemId;
       // this.cacheManager.HINCRBY(
       //   `${REDIS_KEY.ArticlePrefix}@${articleId}`,
       //   REDIS_KEY.ArticleCommentField,

@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { LessThan, Repository } from 'typeorm';
-import { Pagination } from '../../common/dto/query-options.dto';
+import { BasicQuery } from '../../common/dto/query-options.dto';
 import { CreateAnnounceDto, UpdateAnnounceDto } from './dto/announce.dto';
 import { Announce } from './entities/announce.entity';
 
@@ -17,7 +17,7 @@ export class AnnounceService {
     return await this.announceRepo.save(announce);
   }
 
-  async findAll(options: Pagination) {
+  async findAll(options: BasicQuery) {
     const [items, total] = await this.announceRepo.findAndCount(options);
     return {
       items,
@@ -25,7 +25,7 @@ export class AnnounceService {
     };
   }
 
-  async findActive(options: Pagination) {
+  async findActive(options: BasicQuery) {
     const [items, total] = await this.announceRepo.findAndCount({
       where: {
         status: 0,

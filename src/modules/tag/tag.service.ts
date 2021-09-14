@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { TreeRepository } from 'typeorm';
-import { Pagination } from '../../common/dto/query-options.dto';
+import { BasicQuery } from '../../common/dto/query-options.dto';
 import { CreateTagDto, UpdateTagDto } from './dto/tag.dto';
 import { Tag } from './entities/tag.entity';
 
@@ -17,7 +17,7 @@ export class TagService {
     return await this.tagRepo.save(tag);
   }
 
-  async findAll(options: Pagination) {
+  async findAll(options: BasicQuery) {
     return await this.tagRepo.findAndCount(options);
   }
 

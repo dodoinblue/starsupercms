@@ -2,7 +2,8 @@ import { Controller, Get, Param, Delete, Put, Query } from '@nestjs/common';
 import { LikeService } from './like.service';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { Self } from '../../decorators/self.decorator';
-import { Pagination } from '../../common/dto/query-options.dto';
+import { BasicQuery } from '../../common/dto/query-options.dto';
+import { SortToOrderPipe } from '../../pipes/sort-option.pipe';
 
 @Controller('like')
 @ApiTags('Like')
@@ -26,7 +27,7 @@ export class LikeController {
   @Get('users/:userId')
   @ApiOperation({ description: 'Get the list of liked articles of a user.' })
   @Self()
-  getUserLikes(@Param('userId') userId: string, @Query() options: Pagination) {
+  getUserLikes(@Param('userId') userId: string, @Query(SortToOrderPipe) options: BasicQuery) {
     return this.likeService.findLikedArticles(userId, options);
   }
 

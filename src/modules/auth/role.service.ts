@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { In, Repository } from 'typeorm';
-import { Pagination } from '../../common/dto/query-options.dto';
+import { BasicQuery } from '../../common/dto/query-options.dto';
 import { RoleToAccount } from './entity/role-account.entity';
 import { Role } from './entity/role.entity';
 
@@ -20,7 +20,7 @@ export class RoleService {
     return await this.roleRepo.save(role);
   }
 
-  async findAll({ skip, take }: Pagination) {
+  async findAll({ skip, take }: BasicQuery) {
     const [items, total] = await this.roleRepo.findAndCount({ skip, take });
     return {
       items,
@@ -40,7 +40,7 @@ export class RoleService {
     await this.roleRepo.delete(id);
   }
 
-  async findMembers(roleId: string, options: Pagination) {
+  async findMembers(roleId: string, options: BasicQuery) {
     const [items, total] = await this.r2aRepo.findAndCount({
       where: { roleId },
       ...options,

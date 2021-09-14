@@ -1,11 +1,12 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete, Query, Req } from '@nestjs/common';
 import { TagService } from './tag.service';
 import { ApiTags } from '@nestjs/swagger';
-import { Pagination } from '../../common/dto/query-options.dto';
+import { BasicQuery } from '../../common/dto/query-options.dto';
 import { TagPerms } from '../../constants/permissions';
 import { Permission } from '../../decorators/permission.decorator';
 import { attachUserIdToDto } from '../../utils/attach-uid';
 import { CreateTagDto, UpdateTagDto } from './dto/tag.dto';
+import { SortToOrderPipe } from '../../pipes/sort-option.pipe';
 
 @Controller('tag')
 @ApiTags('Tag')
@@ -20,7 +21,7 @@ export class TagController {
   }
 
   @Get()
-  findAll(@Query() options: Pagination) {
+  findAll(@Query(SortToOrderPipe) options: BasicQuery) {
     return this.tagService.findAll(options);
   }
 

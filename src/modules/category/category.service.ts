@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { TreeRepository } from 'typeorm';
-import { Pagination } from '../../common/dto/query-options.dto';
+import { BasicQuery } from '../../common/dto/query-options.dto';
 import { Category } from './entities/category.entity';
 
 @Injectable()
@@ -19,8 +19,8 @@ export class CategoryService {
     return this.categoryRepo.save(category);
   }
 
-  async findAll(options: Pagination) {
-    return await this.categoryRepo.find(options);
+  async findAll(options: BasicQuery) {
+    return await this.categoryRepo.findAndCount(options);
   }
 
   async findOne(id: string) {

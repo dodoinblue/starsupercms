@@ -1,6 +1,6 @@
 import { ApiPropertyOptional, PartialType, PickType } from '@nestjs/swagger';
 import { IsOptional, IsString, MinLength } from 'class-validator';
-import { Pagination } from '../../../common/dto/query-options.dto';
+import { BasicQuery } from '../../../common/dto/query-options.dto';
 import { Item } from '../entities/item.entity';
 
 export class CreateItemDto extends PickType(Item, [
@@ -17,16 +17,11 @@ export class CreateItemDto extends PickType(Item, [
 
 export class UpdateItemDto extends PartialType(CreateItemDto) {}
 
-export class QueryItemOptions extends Pagination {
+export class QueryItemOptions extends BasicQuery {
   @IsString()
   @MinLength(3)
   @IsOptional()
   categoryId?: string;
-
-  @IsString()
-  @MinLength(3)
-  @IsOptional()
-  sort?: string;
 
   @IsString()
   @MinLength(3)

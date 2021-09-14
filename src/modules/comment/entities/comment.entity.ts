@@ -43,9 +43,9 @@ export class Comment extends BaseEntity {
   extra?: any;
 
   @ManyToOne(() => Item, (article) => article.comments)
-  article: Item;
+  item: Item;
 
   @IsString()
   @Column()
-  articleId: string;
+  itemId: string;
 }

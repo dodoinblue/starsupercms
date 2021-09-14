@@ -11,7 +11,9 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
+import { BasicQuery } from '../../common/dto/query-options.dto';
 import { JwtGuard } from '../../guards/jwt.guard';
+import { SortToOrderPipe } from '../../pipes/sort-option.pipe';
 import { attachUserIdToDto } from '../../utils/attach-uid';
 import { CommentService } from './comment.service';
 import { CreateCommentDto, UpdateCommentDto } from './dto/comment.dto';
@@ -30,7 +32,10 @@ export class CommentController {
   }
 
   @Get('articles/:articleId')
-  findByArticleId(@Param('articleId') articleId: string, @Query() options) {
+  findByArticleId(
+    @Param('articleId') articleId: string,
+    @Query(SortToOrderPipe) options: BasicQuery,
+  ) {
     return this.commentService.findByArticleId(articleId, options);
   }
 

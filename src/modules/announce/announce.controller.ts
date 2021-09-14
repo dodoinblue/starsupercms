@@ -1,9 +1,10 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete, Query } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
-import { Pagination } from '../../common/dto/query-options.dto';
+import { BasicQuery } from '../../common/dto/query-options.dto';
 import { AnnouncePerms } from '../../constants/permissions';
 import { HttpCache } from '../../decorators/http-cache.decorator';
 import { Permission } from '../../decorators/permission.decorator';
+import { SortToOrderPipe } from '../../pipes/sort-option.pipe';
 import { AnnounceService } from './announce.service';
 import { CreateAnnounceDto, UpdateAnnounceDto } from './dto/announce.dto';
 
@@ -20,13 +21,13 @@ export class AnnounceController {
 
   @Get()
   @Permission([AnnouncePerms.LIST])
-  findAll(@Query() options: Pagination) {
+  findAll(@Query(SortToOrderPipe) options: BasicQuery) {
     return this.announceService.findAll(options);
   }
 
   @Get('active')
   @HttpCache({ ttl: 60 })
-  findAllActive(@Query() options: Pagination) {
+  findAllActive(@Query(SortToOrderPipe) options: BasicQuery) {
     return this.announceService.findActive(options);
   }
 
