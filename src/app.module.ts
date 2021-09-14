@@ -14,6 +14,7 @@ import { ItemModule } from './modules/item/item.module';
 import { TagModule } from './modules/tag/tag.module';
 import { CategoryModule } from './modules/category/category.module';
 import { CacheModule } from './modules/cache/redis-cache.module';
+import { AnnounceModule } from './modules/announce/announce.module';
 
 @Module({
   imports: [
@@ -31,6 +32,7 @@ import { CacheModule } from './modules/cache/redis-cache.module';
     ItemModule,
     TagModule,
     CategoryModule,
+    AnnounceModule,
   ],
   controllers: [AppController],
   providers: [{ provide: APP_INTERCEPTOR, useClass: HttpCacheInterceptor }],

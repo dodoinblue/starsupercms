@@ -28,3 +28,10 @@ export enum TagPerms {
   EDIT = 'edit_tag',
   DELETE = 'delete_tag',
 }
+
+export enum AnnouncePerms {
+  CREATE = 'create_announce',
+  LIST = 'list_announce',
+  EDIT = 'edit_announce',
+  DELETE = 'delete_announce',
+}
