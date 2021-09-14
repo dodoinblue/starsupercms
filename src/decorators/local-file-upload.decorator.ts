@@ -8,7 +8,8 @@ import { FILE_UPLOAD } from '../config/configurations';
 import { CustomError, ErrCodes } from '../errors/errors';
 import mkdirp from 'mkdirp';
 
-export function SaveUploadToLocal(fileKey = 'file') {
+export function SaveUploadToLocal(options: { fileKey?: string; subFolderPrefix: string }) {
+  const { fileKey = 'file', subFolderPrefix = 'media' } = options;
   return applyDecorators(
     ApiConsumes('multipart/form-data'),
     ApiBody({
@@ -32,7 +33,7 @@ export function SaveUploadToLocal(fileKey = 'file') {
           filename: (_, file, callback) => {
             const fileExtName = extname(file.originalname);
             const subFolderPath = dayjs().format('YYYY-MM-DD');
-            mkdirp.sync(join(FILE_UPLOAD.local.rootPath, subFolderPath));
+            mkdirp.sync(join(FILE_UPLOAD.local.rootPath, subFolderPrefix, subFolderPath));
             const fullFileName = join(subFolderPath, dayjs().format('HH_mm_ss_SSS') + fileExtName);
             callback(null, `${fullFileName}`);
           },

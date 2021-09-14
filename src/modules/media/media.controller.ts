@@ -10,9 +10,18 @@ import { BasicQuery } from '../../common/dto/query-options.dto';
 export class MediaController {
   constructor(private readonly mediaService: MediaService) {}
 
-  @Post()
-  @SaveUploadToLocal('file')
+  @Post('images')
+  @SaveUploadToLocal({ subFolderPrefix: 'media' })
   create(@Body() createMediaDto: CreateMediaDto, @UploadedFile('file') file: Express.Multer.File) {
+    return this.mediaService.create({ ...createMediaDto, file });
+  }
+
+  @Post('avatars')
+  @SaveUploadToLocal({ subFolderPrefix: 'avatar' })
+  createAvatar(
+    @Body() createMediaDto: CreateMediaDto,
+    @UploadedFile('file') file: Express.Multer.File,
+  ) {
     return this.mediaService.create({ ...createMediaDto, file });
   }
 
