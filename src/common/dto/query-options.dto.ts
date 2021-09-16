@@ -1,6 +1,6 @@
 import { ApiPropertyOptional } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
-import { IsInt, IsOptional, IsString, Max, Min, MinLength } from 'class-validator';
+import { IsIn, IsInt, IsOptional, IsString, Max, Min, MinLength } from 'class-validator';
 
 export class BasicQuery {
   @IsInt()
@@ -25,5 +25,12 @@ export class BasicQuery {
   })
   sort?: string;
 
+  // Sort string can be transformed to order expression used in TypeOrm.
   order?: any;
+}
+
+export class BasicTreeQuery extends BasicQuery {
+  @IsString()
+  @IsOptional()
+  parentId?: string;
 }

@@ -8,6 +8,13 @@ export enum AccountPerms {
   EDIT = 'edit_account',
 }
 
+export enum GroupPerms {
+  CREATE = 'create_group',
+  LIST = 'list_group',
+  EDIT = 'edit_group',
+  DELETE = 'delete_group',
+}
+
 export enum ContentCategoryPerms {
   CREATE = 'create_content_category',
   READ = 'read_content_category',
@@ -17,7 +24,7 @@ export enum ContentCategoryPerms {
 
 export enum RolePerms {
   CREATE = 'create_role',
-  READ = 'read_role',
+  LIST = 'list_role',
   EDIT = 'edit_role',
   DELETE = 'delete_role',
 }
