@@ -9,12 +9,13 @@ import {
   Patch,
   Post,
   Query,
-  Req,
   UseGuards,
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { BasicQuery } from '../../common/dto/query-options.dto';
+import { AccountPerms, RolePerms } from '../../constants/permissions';
 import { JwtUserId } from '../../decorators/jwt-user-id.decorator';
+import { Permission } from '../../decorators/permission.decorator';
 import { JwtGuard } from '../../guards/jwt.guard';
 import { SortToOrderPipe } from '../../pipes/sort-option.pipe';
 import { attachUserIdToDto } from '../../utils/attach-uid';
@@ -30,12 +31,14 @@ export class RolesController {
 
   @Get()
   @HttpCode(HttpStatus.OK)
+  @Permission([RolePerms.LIST])
   async list(@Query(SortToOrderPipe) options: BasicQuery) {
     return await this.roleService.findAll(options);
   }
 
   @Post()
   @HttpCode(HttpStatus.CREATED)
+  @Permission([RolePerms.CREATE])
   async create(@Body() dto: CreateRoleDto, @JwtUserId() userId: string) {
     attachUserIdToDto(userId, dto);
     return await this.roleService.create(dto);
@@ -48,6 +51,7 @@ export class RolesController {
   }
 
   @Patch(':roleId')
+  @Permission([RolePerms.EDIT])
   @HttpCode(HttpStatus.NO_CONTENT)
   async update(
     @Param('roleId') roleId: string,
@@ -59,17 +63,20 @@ export class RolesController {
   }
 
   @Delete(':roleId')
+  @Permission([RolePerms.DELETE])
   @HttpCode(HttpStatus.NO_CONTENT)
   async delete(@Param('roleId') roleId: string) {
     return await this.roleService.deleteById(roleId);
   }
 
   @Get(':roleId/members')
+  @Permission([AccountPerms.LIST])
   async getMembers(@Param('roleId') roleId: string, @Query(SortToOrderPipe) options: BasicQuery) {
     return await this.roleService.findMembers(roleId, options);
   }
 
   @Post(':roleId/members')
+  @Permission([RolePerms.EDIT, AccountPerms.EDIT])
   assignMembers(
     @Param('roleId') roleId: string,
     @Body() { memberIds: memberIds }: AssignRoleMembers,
@@ -79,6 +86,7 @@ export class RolesController {
   }
 
   @Delete(':roleId/members/:memberIds')
+  @Permission([RolePerms.EDIT, AccountPerms.EDIT])
   @HttpCode(HttpStatus.NO_CONTENT)
   async deleteMembers(@Param('roleId') roleId: string, @Query() { memberIds }: DeleteRoleMembers) {
     const members = memberIds.split(',');
