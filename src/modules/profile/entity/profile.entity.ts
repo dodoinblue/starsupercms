@@ -53,6 +53,6 @@ export class Profile extends BaseEntity {
   @Column({ nullable: true })
   lang?: string;
 
-  @Column('simple-json', { nullable: true })
+  @Column({ type: 'json', nullable: true })
   extra?: any;
 }

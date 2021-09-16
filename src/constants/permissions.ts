@@ -3,6 +3,11 @@ export enum SiteSettingPerms {
   READ = 'read_site_settings',
 }
 
+export enum AccountPerms {
+  LIST = 'list_account',
+  EDIT = 'edit_account',
+}
+
 export enum ContentCategoryPerms {
   CREATE = 'create_content_category',
   READ = 'read_content_category',

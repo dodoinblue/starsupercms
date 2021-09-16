@@ -16,6 +16,7 @@ import { CategoryModule } from './modules/category/category.module';
 import { CacheModule } from './modules/cache/redis-cache.module';
 import { AnnounceModule } from './modules/announce/announce.module';
 import { CarouselModule } from './modules/carousel/carousel.module';
+import { AdminModule } from './modules/admin/admin.module';
 
 @Module({
   imports: [
@@ -35,6 +36,7 @@ import { CarouselModule } from './modules/carousel/carousel.module';
     CategoryModule,
     AnnounceModule,
     CarouselModule,
+    AdminModule,
   ],
   controllers: [AppController],
   providers: [{ provide: APP_INTERCEPTOR, useClass: HttpCacheInterceptor }],

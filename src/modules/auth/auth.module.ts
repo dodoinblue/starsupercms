@@ -13,5 +13,6 @@ import { RoleToAccount } from './entity/role-account.entity';
   imports: [TypeOrmModule.forFeature([Account, AccountVerifyToken, Role, RoleToAccount])],
   controllers: [AuthController, RolesController],
   providers: [AuthService, RoleService],
+  exports: [AuthService, RoleService],
 })
 export class AuthModule {}

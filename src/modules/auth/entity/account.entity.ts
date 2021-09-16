@@ -1,8 +1,9 @@
 import { ApiHideProperty } from '@nestjs/swagger';
 import { IsBoolean, IsInt, IsString } from 'class-validator';
-import { Column, Entity, OneToMany } from 'typeorm';
+import { Column, Entity, OneToMany, OneToOne } from 'typeorm';
 import { BaseEntity } from '../../../common/entity/base.entity';
 import { Like } from '../../like/entities/like.entity';
+import { Profile } from '../../profile/entity/profile.entity';
 import { RoleToAccount } from './role-account.entity';
 
 @Entity()
@@ -33,4 +34,7 @@ export class Account extends BaseEntity {
 
   @OneToMany(() => Like, (like) => like.account)
   itemLikes: Like[];
+
+  @OneToOne(() => Profile, (profile) => profile.account)
+  profile: Profile;
 }

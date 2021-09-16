@@ -12,6 +12,7 @@ import { randomNumberString } from '../../utils/nanoid';
 import dayjs from 'dayjs';
 import { AccountTokenPurpose, AccountType } from './auth.interface';
 import { JwtPayload, JwtSigned } from './interface/auth.interface';
+import { BasicQuery } from '../../common/dto/query-options.dto';
 
 @Injectable()
 export class AuthService {
@@ -206,5 +207,13 @@ export class AuthService {
       }
     }
     throw new CustomError(ErrCodes.AUTH_CODE_NOT_VALID, 'Wrong code', HttpStatus.BAD_REQUEST);
+  }
+
+  async findAccounts(options: BasicQuery) {
+    const [items, total] = await this.accountRepo.findAndCount({
+      relations: ['profile'],
+      ...options,
+    });
+    return { items, total };
   }
 }
