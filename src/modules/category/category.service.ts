@@ -1,7 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { TreeRepository } from 'typeorm';
-import { BasicQuery } from '../../common/dto/query-options.dto';
+import lodash from 'lodash';
+import { IsNull, TreeRepository } from 'typeorm';
+import { BasicTreeQuery } from '../../common/dto/query-options.dto';
 import { Category } from './entities/category.entity';
 
 @Injectable()
@@ -19,8 +20,15 @@ export class CategoryService {
     return this.categoryRepo.save(category);
   }
 
-  async findAll(options: BasicQuery) {
-    return await this.categoryRepo.findAndCount(options);
+  async findAll(options: BasicTreeQuery) {
+    const basicOptions = lodash.pick(options, ['skip', 'take', 'order']);
+    const whereOptions = options.parentId ? { parentId: options.parentId } : { parentId: IsNull() };
+
+    const [items, total] = await this.categoryRepo.findAndCount({
+      where: whereOptions,
+      ...basicOptions,
+    });
+    return { items, total };
   }
 
   async findOne(id: string) {

@@ -11,7 +11,7 @@ import { CategoryService } from './category.service';
 import { CreateCategoryDto, UpdateCategoryDto } from './dto/category.dto';
 
 @Controller('content/category')
-@ApiTags('ContentCategory')
+@ApiTags('Category')
 export class CategoryController {
   constructor(private readonly categoryService: CategoryService) {}
 
@@ -23,13 +23,13 @@ export class CategoryController {
   }
 
   @Get()
-  @HttpCache({ ttl: 300 })
+  // @HttpCache({ ttl: 300 })
   findAll(@Query(SortToOrderPipe) options: BasicQuery) {
     return this.categoryService.findAll(options);
   }
 
   @Get(':id')
-  @HttpCache({ ttl: 300 })
+  // @HttpCache({ ttl: 300 })
   findOne(@Param('id') id: string) {
     return this.categoryService.findOne(id);
   }
