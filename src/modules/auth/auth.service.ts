@@ -25,8 +25,8 @@ export class AuthService {
 
   async createAuthTokenFromAccount(account: Partial<Account>): Promise<JwtSigned> {
     const payload: JwtPayload = {
+      sub: account.id,
       username: account.username,
-      userId: account.id,
     };
     const roleToAccounts = account.roleToAccounts;
     if (roleToAccounts && roleToAccounts.length > 0) {
@@ -40,8 +40,8 @@ export class AuthService {
     const secretOrKey = AUTH.jwt.secretOrKey;
     const token = jwt.sign(payload, secretOrKey, { expiresIn });
     return {
-      expires_in: expiresIn,
-      access_token: token,
+      expiresIn: expiresIn,
+      accessToken: token,
       ...payload,
     };
   }

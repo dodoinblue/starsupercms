@@ -17,7 +17,7 @@ export class JwtGuard implements CanActivate {
       if (!request.custom) {
         request.custom = {};
       }
-      const picked = lodash.pick(decoded, ['userId', 'username', 'roles']);
+      const picked = lodash.pick(decoded, ['sub', 'username', 'roles']);
       Object.assign(request.custom, picked);
       return true;
     } catch (error) {

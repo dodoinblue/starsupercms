@@ -12,7 +12,7 @@ export class SelfGuard implements CanActivate {
   canActivate(context: ExecutionContext): boolean | Promise<boolean> | Observable<boolean> {
     const userIdPath = this.reflector.get<string>(MetadataKey.USER_ID_PATH, context.getHandler());
     const request = context.switchToHttp().getRequest();
-    const userFromToken = request.custom.userId;
+    const userFromToken = request.custom.sub;
     const userFromParam = lodash.get(request, userIdPath);
     if (
       lodash.isString(userFromParam) &&

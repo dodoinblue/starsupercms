@@ -111,7 +111,7 @@ export class AuthController {
   @HttpCode(200)
   async renewalToken(@Req() { custom }) {
     return await this.authService.createAuthTokenFromPayload(
-      lodash.pick(custom, ['userId', 'username', 'roles']),
+      lodash.pick(custom, ['sub', 'username', 'roles']),
     );
   }
 }
