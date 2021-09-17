@@ -1,6 +1,6 @@
 import { ApiPropertyOptional } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
-import { IsIn, IsInt, IsOptional, IsString, Max, Min, MinLength } from 'class-validator';
+import { IsBoolean, IsIn, IsInt, IsOptional, IsString, Max, Min, MinLength } from 'class-validator';
 
 export class BasicQuery {
   @IsInt()
@@ -33,4 +33,9 @@ export class BasicTreeQuery extends BasicQuery {
   @IsString()
   @IsOptional()
   parentId?: string;
+
+  @IsBoolean()
+  @IsOptional()
+  @Type(() => Boolean)
+  tree?: boolean;
 }

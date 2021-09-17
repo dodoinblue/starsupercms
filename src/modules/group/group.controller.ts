@@ -1,7 +1,6 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete, Query } from '@nestjs/common';
 import { GroupService } from './group.service';
-import { CreateGroupDto, UpdateGroupDto } from './dto/group.dto';
-import { BasicTreeQuery } from '../../common/dto/query-options.dto';
+import { CreateGroupDto, GroupQueryOptions, UpdateGroupDto } from './dto/group.dto';
 import { ApiTags } from '@nestjs/swagger';
 import { Permission } from '../../decorators/permission.decorator';
 import { GroupPerms } from '../../constants/permissions';
@@ -22,7 +21,7 @@ export class GroupController {
 
   @Get()
   @Permission([GroupPerms.LIST])
-  findAll(@Query() options: BasicTreeQuery) {
+  findAll(@Query() options: GroupQueryOptions) {
     return this.groupService.findAll(options);
   }
 
@@ -32,11 +31,9 @@ export class GroupController {
   }
 
   @Get(':id/children')
-  // @Permission([GroupPerms.LIST])
+  @Permission([GroupPerms.LIST])
   async findChildren(@Param('id') id: string) {
-    const resp = await this.groupService.findChildren(id);
-    console.log('resp');
-    return resp;
+    return await this.groupService.findChildren(id);
   }
 
   @Patch(':id')

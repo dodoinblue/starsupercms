@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import lodash from 'lodash';
 import { IsNull, TreeRepository } from 'typeorm';
@@ -21,14 +21,34 @@ export class CategoryService {
   }
 
   async findAll(options: BasicTreeQuery) {
-    const basicOptions = lodash.pick(options, ['skip', 'take', 'order']);
-    const whereOptions = options.parentId ? { parentId: options.parentId } : { parentId: IsNull() };
-
-    const [items, total] = await this.categoryRepo.findAndCount({
-      where: whereOptions,
-      ...basicOptions,
-    });
-    return { items, total };
+    const { tree = false, parentId = null } = options;
+    if (tree) {
+      if (parentId) {
+        const parent = await this.categoryRepo.findOne(parentId);
+        if (!parent) {
+          throw new NotFoundException();
+        }
+        const item = await this.categoryRepo.findDescendantsTree(parent);
+        // Keep the result in the same format in all cases
+        return { items: [item], total: 1 };
+      } else {
+        const items = await this.categoryRepo.findTrees();
+        return {
+          items,
+          total: items.length,
+        };
+      }
+    } else {
+      const basicOptions = lodash.pick(options, ['skip', 'take', 'order']);
+      const whereOptions = options.parentId
+        ? { parentId: options.parentId }
+        : { parentId: IsNull() };
+      const [items, total] = await this.categoryRepo.findAndCount({
+        where: whereOptions,
+        ...basicOptions,
+      });
+      return { items, total };
+    }
   }
 
   async findOne(id: string) {
