@@ -19,7 +19,13 @@ import { Permission } from '../../decorators/permission.decorator';
 import { JwtGuard } from '../../guards/jwt.guard';
 import { SortToOrderPipe } from '../../pipes/sort-option.pipe';
 import { attachUserIdToDto } from '../../utils/attach-uid';
-import { AssignRoleMembers, CreateRoleDto, DeleteRoleMembers, UpdateRoleDto } from './dto/role.dto';
+import {
+  AssignRoleMembers,
+  CreateRoleDto,
+  DeleteRoleMembers,
+  RoleQuery,
+  UpdateRoleDto,
+} from './dto/role.dto';
 import { RoleService } from './role.service';
 
 @Controller('roles')
@@ -32,7 +38,7 @@ export class RolesController {
   @Get()
   @HttpCode(HttpStatus.OK)
   @Permission([RolePerms.LIST])
-  async list(@Query(SortToOrderPipe) options: BasicQuery) {
+  async list(@Query(SortToOrderPipe) options: RoleQuery) {
     return await this.roleService.findAll(options);
   }
 

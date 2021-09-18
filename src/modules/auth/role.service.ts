@@ -1,7 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { In, Repository } from 'typeorm';
+import lodash from 'lodash';
+import { In, Not, Repository } from 'typeorm';
 import { BasicQuery } from '../../common/dto/query-options.dto';
+import { RoleQuery } from './dto/role.dto';
 import { RoleToAccount } from './entity/role-account.entity';
 import { Role } from './entity/role.entity';
 
@@ -20,8 +22,14 @@ export class RoleService {
     return await this.roleRepo.save(role);
   }
 
-  async findAll({ skip, take }: BasicQuery) {
-    const [items, total] = await this.roleRepo.findAndCount({ skip, take });
+  async findAll(options: RoleQuery) {
+    const basicOptions = lodash.pick(options, ['skip', 'take', 'order']);
+    const whereOptions = lodash.omit(options, ['skip', 'take', 'order']);
+    const [items, total] = await this.roleRepo.findAndCount({
+      where: whereOptions,
+      ...basicOptions,
+    });
+
     return {
       items,
       total,
@@ -37,7 +45,7 @@ export class RoleService {
   }
 
   async deleteById(id: string) {
-    await this.roleRepo.delete(id);
+    await this.roleRepo.delete({ id: id, key: Not('admin') });
   }
 
   async findMembers(roleId: string, options: BasicQuery) {

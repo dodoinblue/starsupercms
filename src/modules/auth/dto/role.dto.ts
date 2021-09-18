@@ -1,20 +1,15 @@
-import { PartialType } from '@nestjs/swagger';
-import { IsOptional, IsString, MinLength } from 'class-validator';
+import { IntersectionType, OmitType, PartialType, PickType } from '@nestjs/swagger';
+import { IsString, MinLength } from 'class-validator';
+import { BasicQuery } from '../../../common/dto/query-options.dto';
+import { Role } from '../entity/role.entity';
 
-export class CreateRoleDto {
-  @IsString()
-  @MinLength(3)
-  key: string;
-
-  @IsString()
-  @MinLength(3)
-  name: string;
-
-  @IsString()
-  @MinLength(3)
-  @IsOptional()
-  description: string;
-}
+export class CreateRoleDto extends PickType(Role, [
+  'key',
+  'name',
+  'description',
+  'status',
+  'permissions',
+]) {}
 
 export class UpdateRoleDto extends PartialType(CreateRoleDto) {}
 
@@ -28,3 +23,8 @@ export class DeleteRoleMembers {
   @MinLength(3)
   memberIds: string;
 }
+
+export class RoleQuery extends IntersectionType(
+  BasicQuery,
+  OmitType(UpdateRoleDto, ['permissions']),
+) {}
