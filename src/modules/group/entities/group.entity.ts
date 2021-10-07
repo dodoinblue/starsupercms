@@ -1,9 +1,10 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
 import { IsString, MinLength, IsOptional, IsInt, IsAlphanumeric } from 'class-validator';
-import { Column, Entity, Tree, TreeChildren, TreeParent } from 'typeorm';
+import { Column, Entity, OneToMany, Tree, TreeChildren, TreeParent } from 'typeorm';
 import { BaseEntity } from '../../../common/entity/base.entity';
 import { nanoid } from '../../../utils/nanoid';
+import { GroupToAccount } from '../../auth/entity/group-account.entity';
 
 @Entity()
 @Tree('materialized-path')
@@ -48,6 +49,9 @@ export class Group extends BaseEntity {
   @ApiProperty({ description: "Parent group's id" })
   @Column({ nullable: true })
   parentId?: string;
+
+  @OneToMany(() => GroupToAccount, (groupToAccount) => groupToAccount.group)
+  groupToAccounts: GroupToAccount[];
 
   mpath?: string;
 

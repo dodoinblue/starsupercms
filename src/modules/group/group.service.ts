@@ -1,10 +1,10 @@
 import { BadRequestException, HttpStatus, Injectable, NotFoundException } from '@nestjs/common';
-import { InjectEntityManager, InjectRepository } from '@nestjs/typeorm';
+import { InjectRepository } from '@nestjs/typeorm';
 import lodash from 'lodash';
-import { Connection, EntityManager, IsNull, Like, TreeRepository } from 'typeorm';
-import { BasicTreeQuery } from '../../common/dto/query-options.dto';
+import { Connection, In, IsNull, TreeRepository } from 'typeorm';
 import { CustomError, ErrCodes } from '../../errors/errors';
-import { CreateGroupDto, GroupQueryOptions, UpdateGroupDto } from './dto/group.dto';
+import { GroupToAccount } from '../auth/entity/group-account.entity';
+import { CreateGroupDto, GroupQueryOptions } from './dto/group.dto';
 import { Group } from './entities/group.entity';
 
 @Injectable()
@@ -13,8 +13,8 @@ export class GroupService {
     @InjectRepository(Group)
     private groupRepo: TreeRepository<Group>,
     private connection: Connection,
-    @InjectEntityManager()
-    private entityManager: EntityManager,
+    @InjectRepository(GroupToAccount)
+    private g2aRepo: TreeRepository<GroupToAccount>,
   ) {
     groupRepo.metadata.columns = groupRepo.metadata.columns.map((x) => {
       if (x.databaseName === 'mpath') {
@@ -118,5 +118,16 @@ export class GroupService {
         );
       }
     }
+  }
+
+  async assignMembers(groupId: string, memberIds: string[], operator: string) {
+    const roleAccounts = memberIds.map((memberId) =>
+      this.g2aRepo.create({ groupId, accountId: memberId, createdBy: operator }),
+    );
+    return await this.g2aRepo.save(roleAccounts);
+  }
+
+  async deleteMembers(groupId: string, memberIds: string[]) {
+    await this.g2aRepo.delete({ groupId, accountId: In(memberIds) });
   }
 }

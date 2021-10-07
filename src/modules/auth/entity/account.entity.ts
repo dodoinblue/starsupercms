@@ -4,6 +4,7 @@ import { Column, Entity, OneToMany, OneToOne } from 'typeorm';
 import { BaseEntity } from '../../../common/entity/base.entity';
 import { Like } from '../../like/entities/like.entity';
 import { Profile } from '../../profile/entity/profile.entity';
+import { GroupToAccount } from './group-account.entity';
 import { RoleToAccount } from './role-account.entity';
 
 @Entity()
@@ -37,4 +38,7 @@ export class Account extends BaseEntity {
 
   @OneToOne(() => Profile, (profile) => profile.account)
   profile: Profile;
+
+  @OneToMany(() => GroupToAccount, (groupToAccount) => groupToAccount.account)
+  groupToAccounts: GroupToAccount[];
 }

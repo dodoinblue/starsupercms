@@ -8,11 +8,24 @@ import { RolesController } from './role.controller';
 import { Role } from './entity/role.entity';
 import { RoleService } from './role.service';
 import { RoleToAccount } from './entity/role-account.entity';
+import { AccountService } from './account.service';
+import { AccountController } from './account.controller';
+import { GroupToAccount } from './entity/group-account.entity';
+import { Group } from '../group/entities/group.entity';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Account, AccountVerifyToken, Role, RoleToAccount])],
-  controllers: [AuthController, RolesController],
-  providers: [AuthService, RoleService],
-  exports: [AuthService, RoleService],
+  imports: [
+    TypeOrmModule.forFeature([
+      Account,
+      AccountVerifyToken,
+      Role,
+      RoleToAccount,
+      Group,
+      GroupToAccount,
+    ]),
+  ],
+  controllers: [AuthController, RolesController, AccountController],
+  providers: [AuthService, RoleService, AccountService],
+  exports: [AuthService, RoleService, AccountService],
 })
 export class AuthModule {}

@@ -29,3 +29,13 @@ export class EmailResetPassword extends EmailAuth {
   @IsString()
   token: string;
 }
+
+export class AssignRoles {
+  @IsString({ each: true })
+  roleIds: string[];
+}
+
+export class AssignGroups {
+  @IsString({ each: true })
+  groupIds: string[];
+}

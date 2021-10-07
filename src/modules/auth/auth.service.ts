@@ -208,12 +208,4 @@ export class AuthService {
     }
     throw new CustomError(ErrCodes.AUTH_CODE_NOT_VALID, 'Wrong code', HttpStatus.BAD_REQUEST);
   }
-
-  async findAccounts(options: BasicQuery) {
-    const [items, total] = await this.accountRepo.findAndCount({
-      relations: ['profile'],
-      ...options,
-    });
-    return { items, total };
-  }
 }
